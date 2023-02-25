@@ -30,3 +30,9 @@ function setup() {
 function windowResized() {
     p6_ResizeCanvas()
 }
+
+
+// Load image
+// https://p5js.org/reference/#/p5/loadImage
+
+// Windows 1920 _ 1080

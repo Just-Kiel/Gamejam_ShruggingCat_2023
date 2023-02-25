@@ -15,25 +15,12 @@ function setup() {
 function windowResized() {
     p6_ResizeCanvas();
 }
-var __ASPECT_RATIO = 1;
-var __MARGIN_SIZE = 25;
+var __MARGIN_SIZE = 0;
 function __desiredCanvasWidth() {
-    var windowRatio = windowWidth / windowHeight;
-    if (__ASPECT_RATIO > windowRatio) {
-        return windowWidth - __MARGIN_SIZE * 2;
-    }
-    else {
-        return __desiredCanvasHeight() * __ASPECT_RATIO;
-    }
+    return windowWidth - __MARGIN_SIZE * 2;
 }
 function __desiredCanvasHeight() {
-    var windowRatio = windowWidth / windowHeight;
-    if (__ASPECT_RATIO > windowRatio) {
-        return __desiredCanvasWidth() / __ASPECT_RATIO;
-    }
-    else {
-        return windowHeight - __MARGIN_SIZE * 2;
-    }
+    return windowHeight - __MARGIN_SIZE * 2;
 }
 var __canvas;
 function __centerCanvas() {
