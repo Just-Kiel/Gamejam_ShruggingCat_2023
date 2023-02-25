@@ -1,6 +1,6 @@
 class CFPS {
     
-    static FPSControl : CFPS;
+    static FPSControl : CFPS = new CFPS();
 
     //int 
     oldTime;

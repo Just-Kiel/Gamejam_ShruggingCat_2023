@@ -14,6 +14,7 @@
 //       Variables
 // -------------------
 let menu : Menu;
+let theApp : CApp;
 
 // -------------------
 //       Drawing
@@ -21,8 +22,10 @@ let menu : Menu;
 
 function draw() {
     clear()
-
+    //move to onrender
     menu.OnDraw(0, 0)
+    theApp.OnLoop();
+    theApp.OnRender();
 }
 
 // -------------------
@@ -32,7 +35,10 @@ function draw() {
 function setup() {
     p6_CreateCanvas()
 
-    menu = new Menu([0.55, 0.65], [0.56, 0.78], [0, 0]);
+    theApp = new CApp();
+    theApp.OnInit();
+    //move to oninit
+    menu = new Menu([0.55, 0.65], [0.56, 0.78]);
     menu.OnLoad();
 }
 

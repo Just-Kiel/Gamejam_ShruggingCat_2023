@@ -19,8 +19,8 @@ class CSurface {
     static OnDraw(Surf_Src : p5.Image, X, Y);
     static OnDraw(Surf_Src : p5.Image, X, Y, X2, Y2, W, H);
     static OnDraw(Surf_Src : p5.Image, X, Y, X2?, Y2?, W?, H?) {
-        let SpriteSheet;
-        if (X2 === undefined && Y2 === undefined) {
+        let SpriteSheet = Surf_Src;
+        if (X2 !== undefined && Y2 !== undefined) {
             SpriteSheet = Surf_Src.get(X2, Y2, W, H);
         }
         image(SpriteSheet, X, Y);
