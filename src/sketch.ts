@@ -14,14 +14,16 @@
 //       Variables
 // -------------------
 let imageTest;
-let cutSpriteSheet;
 
 // -------------------
 //       Drawing
 // -------------------
 
 function draw() {
+    background("black")
     drawPartOfImage(imageTest, 600, 250, 50, 50)
+
+    image(imageTest, 0, 0)
 }
 
 // -------------------
@@ -33,18 +35,12 @@ function setup() {
 
     // need to add ./src/assets
     imageTest = generateImage("./src/assets/test_image.png")
+    // imageTest = generateImage("https://cdn.pixabay.com/photo/2015/10/01/17/17/car-967387__480.png")
 }
 
 function windowResized() {
     p6_ResizeCanvas()
 }
 
-
-// Load image
-// https://p5js.org/reference/#/p5/loadImage
-
-// Windows 1920 _ 1080
-
 // load image + return image stockée dans les classes concernées
 // regles on les affiche où ?
-// draw part of image

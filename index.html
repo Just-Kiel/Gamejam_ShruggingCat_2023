@@ -3,6 +3,11 @@
     <style>
         html {
             background-color: rgb(235, 235, 235);
+            /* The second value here is a fallback. */
+            cursor: url(./src/assets/cursor.png), auto;
+        }
+        html:active {
+          cursor: url(./src/assets/pressed_cursor.png), auto;
         }
         .p5Canvas {
             z-index: -1;

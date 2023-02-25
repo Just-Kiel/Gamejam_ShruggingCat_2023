@@ -1,7 +1,8 @@
 var imageTest;
-var cutSpriteSheet;
 function draw() {
+    background("black");
     drawPartOfImage(imageTest, 600, 250, 50, 50);
+    image(imageTest, 0, 0);
 }
 function setup() {
     p6_CreateCanvas();
@@ -55,7 +56,7 @@ function generateImage(link) {
     return loadImage(link);
 }
 function drawPartOfImage(srcImage, x, y, width, height) {
-    cutSpriteSheet = srcImage.get(x, y, width, height);
+    var cutSpriteSheet = srcImage.get(x, y, width, height);
     image(cutSpriteSheet, 0, 0);
 }
 //# sourceMappingURL=../src/src/build.js.map
