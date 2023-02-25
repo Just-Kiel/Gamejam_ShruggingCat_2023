@@ -5,6 +5,7 @@ class CPlayer extends CEntity {
             super();
             this.type = Type.ENTITY_TYPE_PLAYER;
             this.anim_Control.maxFrames = 4;
+            this.anim_Control.SetFrameRate(500);
         }
         
         //int width

@@ -1,11 +1,16 @@
 var imageTest;
 var menu;
+var theApp;
 function draw() {
     clear();
     menu.OnDraw(0, 0);
+    theApp.OnLoop();
+    theApp.OnRender();
 }
 function setup() {
     p6_CreateCanvas();
+    theApp = new CApp();
+    theApp.OnInit();
     menu = new Menu([0.55, 0.65], [0.56, 0.78]);
     menu.OnLoad();
 }
@@ -50,6 +55,71 @@ var p6_SaveImageSequence = function (durationInFrames, fileExtension) {
         }, mimeType);
     }
 };
+function keyPressed() {
+    if (keyCode === LEFT_ARROW) {
+    }
+    else if (keyCode === RIGHT_ARROW) {
+    }
+}
+function keyReleased() {
+    if (keyCode === LEFT_ARROW) {
+    }
+    else if (keyCode === RIGHT_ARROW) {
+    }
+}
+var CApp = (function () {
+    function CApp() {
+        this.inMenu = true;
+        this.inGame = false;
+        this.inVictory = false;
+        this.inDefeat = false;
+    }
+    CApp.prototype.OnInit = function () {
+        this.Walter = new CPlayer();
+        this.Walter.OnLoad("./src/assets/PKM_1.png", 32, 32, 2);
+        this.Walter.X = mouseX;
+        this.Walter.Y = mouseY;
+        CEntity.EntityList[0] = this.Walter;
+    };
+    CApp.prototype.mouseButtonPressed = function () {
+        if (mouseIsPressed === true) {
+            if (mouseButton === LEFT) {
+            }
+            if (mouseButton === RIGHT) {
+            }
+            if (mouseButton === CENTER) {
+            }
+        }
+    };
+    CApp.prototype.OnLoop = function () {
+        CFPS.FPSControl.OnLoop();
+        if (this.inGame) {
+            for (var i = 0; i < 1; i++) {
+                CEntity.EntityList[i].OnLoop();
+            }
+        }
+        if (this.inVictory) {
+        }
+        if (this.inDefeat) {
+        }
+    };
+    CApp.prototype.OnRender = function () {
+        if (this.inMenu) {
+        }
+        if (this.inGame) {
+            for (var i = 0; i < 1; i++) {
+                CEntity.EntityList[i].OnRender();
+                this.Walter.OnRender();
+            }
+        }
+        if (this.inVictory) {
+        }
+        else if (this.inDefeat) {
+        }
+    };
+    return CApp;
+}());
+;
 var CFPS = (function () {
     function CFPS() {
         this.oldTime = 0;
@@ -74,6 +144,7 @@ var CFPS = (function () {
     CFPS.prototype.GetSpeedFactor = function () {
         return this.speedFactor;
     };
+    CFPS.FPSControl = new CFPS();
     return CFPS;
 }());
 ;
@@ -87,7 +158,7 @@ var CAnimation = (function () {
         this.oscillate = false;
     }
     CAnimation.prototype.OnAnimate = function () {
-        if (this.oldTime + frameRate > millis()) {
+        if ((this.oldTime + this.frameRate) > millis()) {
             return;
         }
         this.oldTime = millis();
@@ -193,6 +264,7 @@ var Type;
 ;
 var CEntity = (function () {
     function CEntity() {
+        this.anim_Control = new CAnimation();
         this.X = this.Y = 0.0;
         this.width = this.height = 0;
         this.type = Type.ENTITY_TYPE_GENERIC;
@@ -211,11 +283,12 @@ var CEntity = (function () {
         this.OnAnimate();
     };
     CEntity.prototype.OnRender = function () {
-        CSurface.OnDraw(this.Surf_Entity, this.X, this.Y, (this.frameCol + this.currentFrameCol) * width, ((this.frameRow + this.currentFrameRow) + this.anim_Control.GetCurrentFrame()) * this.height, this.width, this.height);
+        CSurface.OnDraw(this.Surf_Entity, this.X, this.Y, (this.frameCol + this.currentFrameCol) * this.width, ((this.frameRow + this.currentFrameRow) + this.anim_Control.GetCurrentFrame()) * this.height, this.width, this.height);
     };
     CEntity.prototype.OnAnimate = function () {
         this.anim_Control.OnAnimate();
     };
+    CEntity.EntityList = new Array(10);
     return CEntity;
 }());
 ;
@@ -264,6 +337,7 @@ var CPlayer = (function (_super) {
         var _this = _super.call(this) || this;
         _this.type = Type.ENTITY_TYPE_PLAYER;
         _this.anim_Control.maxFrames = 4;
+        _this.anim_Control.SetFrameRate(500);
         return _this;
     }
     CPlayer.prototype.OnLoad = function (File, Width, Height, maxFrames) {
@@ -288,8 +362,8 @@ var CSurface = (function () {
         return loadImage(File);
     };
     CSurface.OnDraw = function (Surf_Src, X, Y, X2, Y2, W, H) {
-        var SpriteSheet;
-        if (X2 === undefined && Y2 === undefined) {
+        var SpriteSheet = Surf_Src;
+        if (X2 !== undefined && Y2 !== undefined) {
             SpriteSheet = Surf_Src.get(X2, Y2, W, H);
         }
         image(SpriteSheet, X, Y);

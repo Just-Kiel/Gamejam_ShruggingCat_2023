@@ -30,10 +30,10 @@ class CAnimation {
     }
     //Calcul du changement de frame de l'animation
     OnAnimate() {
-        if (this.oldTime + frameRate > millis()) {
+        if ((this.oldTime + this.frameRate) > millis()) {
             return;
         }
-        
+
         this.oldTime = millis();
         
         this.currentFrame += this.frameInc;

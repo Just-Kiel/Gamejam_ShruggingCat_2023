@@ -8,7 +8,7 @@ enum Type {
 
 class CEntity {
 
-    static EntityList : Array<CEntity> ;
+    static EntityList : Array<CEntity> = new Array(10);
     
     anim_Control : CAnimation;
     Surf_Entity : p5.Image;
@@ -41,6 +41,7 @@ class CEntity {
     end_clock;
     
     constructor() {
+        this.anim_Control = new CAnimation();
 
         this.X = this.Y = 0.0;
         this.width = this.height = 0;
@@ -75,7 +76,7 @@ class CEntity {
     OnRender(){
         //Si la camera suit le joueur on dessine le joueur au centre
         //Le cas echeant, on calcule ses coordonnees
-        CSurface.OnDraw(this.Surf_Entity, this.X, this.Y, (this.frameCol + this.currentFrameCol) * width, ((this.frameRow + this.currentFrameRow) + this.anim_Control.GetCurrentFrame()) * this.height, this.width, this.height);
+        CSurface.OnDraw(this.Surf_Entity, this.X, this.Y, (this.frameCol + this.currentFrameCol) * this.width, ((this.frameRow + this.currentFrameRow) + this.anim_Control.GetCurrentFrame()) * this.height, this.width, this.height);
     } 
     
     OnAnimate() {
