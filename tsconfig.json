@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "mapRoot": "./src/",
+    "module": "none",
+    "outFile": "./build/build.js",
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "rootDir": "src",
+    "sourceMap": true,
+    "sourceRoot": "./src/",
+    "target": "es5"
+  }
+}
