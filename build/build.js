@@ -1,21 +1,13 @@
-var menu;
 var theApp;
 function draw() {
     clear();
-    menu.OnDraw(0, 0);
     theApp.OnLoop();
     theApp.OnRender();
 }
 function setup() {
     p6_CreateCanvas();
-<<<<<<< HEAD
-    menu = new Menu([0.55, 0.65], [0.56, 0.78], [0, 0]);
-=======
     theApp = new CApp();
     theApp.OnInit();
-    menu = new Menu([0.55, 0.65], [0.56, 0.78]);
->>>>>>> main
-    menu.OnLoad();
 }
 function windowResized() {
     p6_ResizeCanvas();
@@ -70,6 +62,46 @@ function keyReleased() {
     else if (keyCode === RIGHT_ARROW) {
     }
 }
+function calculateBBOXES(elements) {
+    var bboxes = [];
+    for (var index = 0; index < elements.length; index++) {
+        var element = elements[index];
+        if (index % 2 == 0) {
+            var followElement = elements[index + 1];
+            bboxes.push([followElement[0] * windowWidth, (followElement[0] * windowWidth) + element.width,
+                followElement[1] * windowHeight, (followElement[1] * windowHeight) + element.height]);
+        }
+    }
+    return bboxes;
+}
+function mouseClicked() {
+    if (theApp.inMenu) {
+        var elements = [theApp.menu.playButtonImage, theApp.menu.playButtonCoordinates, theApp.menu.rulesButtonImage, theApp.menu.rulesButtonCoordinates, theApp.menu.backButtonImage, theApp.menu.backButtonCoordinates];
+        var bboxes = calculateBBOXES(elements);
+        if (theApp.menu.currentMenuState == Page.MENU) {
+            if (mouseX >= bboxes[0][0] && mouseX <= bboxes[0][1] && mouseY >= bboxes[0][2] && mouseY <= bboxes[0][3]) {
+                theApp.inGame = true;
+                theApp.inMenu = false;
+            }
+            if (mouseX >= bboxes[1][0] && mouseX <= bboxes[1][1] && mouseY >= bboxes[1][2] && mouseY <= bboxes[1][3]) {
+                theApp.menu.currentMenuState = Page.RULES;
+            }
+        }
+        else if (theApp.menu.currentMenuState == Page.RULES) {
+            if (mouseX >= bboxes[2][0] && mouseX <= bboxes[2][1] && mouseY >= bboxes[2][2] && mouseY <= bboxes[2][3]) {
+                theApp.menu.currentMenuState = Page.MENU;
+            }
+        }
+    }
+    else if (theApp.inGame) {
+        if (mouseButton === LEFT) {
+        }
+        if (mouseButton === RIGHT) {
+        }
+        if (mouseButton === CENTER) {
+        }
+    }
+}
 var CApp = (function () {
     function CApp() {
         this.inMenu = true;
@@ -80,19 +112,11 @@ var CApp = (function () {
     CApp.prototype.OnInit = function () {
         this.Walter = new CPlayer();
         this.Walter.OnLoad("./src/assets/PKM_1.png", 32, 32, 2);
+        this.menu = new Menu([0.55, 0.65], [0.56, 0.78], [0, 0]);
+        this.menu.OnLoad();
         this.Walter.X = mouseX;
         this.Walter.Y = mouseY;
         CEntity.EntityList[0] = this.Walter;
-    };
-    CApp.prototype.mouseButtonPressed = function () {
-        if (mouseIsPressed === true) {
-            if (mouseButton === LEFT) {
-            }
-            if (mouseButton === RIGHT) {
-            }
-            if (mouseButton === CENTER) {
-            }
-        }
     };
     CApp.prototype.OnLoop = function () {
         CFPS.FPSControl.OnLoop();
@@ -108,6 +132,7 @@ var CApp = (function () {
     };
     CApp.prototype.OnRender = function () {
         if (this.inMenu) {
+            this.menu.OnDraw(0, 0);
         }
         if (this.inGame) {
             for (var i = 0; i < 1; i++) {

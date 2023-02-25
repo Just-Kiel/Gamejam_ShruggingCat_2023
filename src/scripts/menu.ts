@@ -14,14 +14,14 @@ class Menu {
 
     // bouton jouer
     playButtonImage;
-    playButtonCoordinates;
+    playButtonCoordinates : Array<number>;
     
     // bouton regles
     rulesButtonImage;
-    rulesButtonCoordinates;
+    rulesButtonCoordinates : Array<number>;
     rulesBackgroundImage;
     backButtonImage;
-    backButtonCoordinates;
+    backButtonCoordinates : Array<number>;
     
     constructor([xPlayButton, yPlayButton], [xRulesButton, yRulesButton], [xBackButton, yBackButton]) {
         this.currentMenuState = Page.MENU;
