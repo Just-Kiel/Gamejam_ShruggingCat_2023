@@ -45,4 +45,10 @@ var p6_SaveImageSequence = function (durationInFrames, fileExtension) {
         }, mimeType);
     }
 };
+function test_draw() {
+    ellipse(0, 0, 200);
+}
+function createImage(link) {
+    return loadImage(link);
+}
 //# sourceMappingURL=../src/src/build.js.map

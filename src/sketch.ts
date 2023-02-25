@@ -35,3 +35,6 @@ function windowResized() {
 // https://p5js.org/reference/#/p5/loadImage
 
 // Windows 1920 _ 1080
+
+// load image + return image stockée dans les classes concernées
+// regles on les affiche où ?
