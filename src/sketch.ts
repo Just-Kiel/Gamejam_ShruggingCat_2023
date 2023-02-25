@@ -11,11 +11,17 @@
 // gui.add(params, "Download_Image")
 
 // -------------------
+//       Variables
+// -------------------
+let imageTest;
+let cutSpriteSheet;
+
+// -------------------
 //       Drawing
 // -------------------
 
 function draw() {
-    background("black")
+    drawPartOfImage(imageTest, 600, 250, 50, 50)
 }
 
 // -------------------
@@ -24,6 +30,9 @@ function draw() {
 
 function setup() {
     p6_CreateCanvas()
+
+    // need to add ./src/assets
+    imageTest = generateImage("./src/assets/test_image.png")
 }
 
 function windowResized() {
@@ -38,3 +47,4 @@ function windowResized() {
 
 // load image + return image stockée dans les classes concernées
 // regles on les affiche où ?
+// draw part of image

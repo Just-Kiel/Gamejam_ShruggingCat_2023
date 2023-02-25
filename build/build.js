@@ -1,8 +1,11 @@
+var imageTest;
+var cutSpriteSheet;
 function draw() {
-    background("black");
+    drawPartOfImage(imageTest, 600, 250, 50, 50);
 }
 function setup() {
     p6_CreateCanvas();
+    imageTest = generateImage("./src/assets/test_image.png");
 }
 function windowResized() {
     p6_ResizeCanvas();
@@ -48,7 +51,11 @@ var p6_SaveImageSequence = function (durationInFrames, fileExtension) {
 function test_draw() {
     ellipse(0, 0, 200);
 }
-function createImage(link) {
+function generateImage(link) {
     return loadImage(link);
+}
+function drawPartOfImage(srcImage, x, y, width, height) {
+    cutSpriteSheet = srcImage.get(x, y, width, height);
+    image(cutSpriteSheet, 0, 0);
 }
 //# sourceMappingURL=../src/src/build.js.map
