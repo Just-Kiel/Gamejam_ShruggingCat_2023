@@ -1,4 +1,3 @@
-var imageTest;
 var menu;
 function draw() {
     clear();
@@ -6,7 +5,7 @@ function draw() {
 }
 function setup() {
     p6_CreateCanvas();
-    menu = new Menu([0.55, 0.65], [0.56, 0.78]);
+    menu = new Menu([0.55, 0.65], [0.56, 0.78], [0, 0]);
     menu.OnLoad();
 }
 function windowResized() {
@@ -220,30 +219,42 @@ var Page;
 (function (Page) {
     Page[Page["MENU"] = 0] = "MENU";
     Page[Page["RULES"] = 1] = "RULES";
-    Page[Page["GAME"] = 2] = "GAME";
 })(Page || (Page = {}));
 ;
 var Menu = (function () {
-    function Menu(_a, _b) {
+    function Menu(_a, _b, _c) {
         var xPlayButton = _a[0], yPlayButton = _a[1];
         var xRulesButton = _b[0], yRulesButton = _b[1];
+        var xBackButton = _c[0], yBackButton = _c[1];
         this.currentMenuState = Page.MENU;
         this.backgroundImage = "./src/assets/background_menu.png";
         this.playButtonImage = "./src/assets/play_button.png";
         this.rulesButtonImage = "./src/assets/rules_button.png";
+        this.rulesBackgroundImage = "./src/assets/rules.png";
+        this.backButtonImage = "./src/assets/cursor.png";
         this.playButtonCoordinates = [xPlayButton, yPlayButton];
         this.rulesButtonCoordinates = [xRulesButton, yRulesButton];
+        this.backButtonCoordinates = [xBackButton, yBackButton];
     }
     Menu.prototype.OnLoad = function () {
         this.backgroundImage = loadImage(this.backgroundImage);
         this.playButtonImage = loadImage(this.playButtonImage);
         this.rulesButtonImage = loadImage(this.rulesButtonImage);
+        this.rulesBackgroundImage = loadImage(this.rulesBackgroundImage);
+        this.backButtonImage = loadImage(this.backButtonImage);
     };
     Menu.prototype.OnDraw = function (X, Y) {
-        this.backgroundImage.resize(windowWidth, windowHeight);
-        image(this.backgroundImage, X, Y);
-        image(this.playButtonImage, this.playButtonCoordinates[0] * windowWidth, this.playButtonCoordinates[1] * windowHeight);
-        image(this.rulesButtonImage, this.rulesButtonCoordinates[0] * windowWidth, this.rulesButtonCoordinates[1] * windowHeight);
+        if (this.currentMenuState == Page.MENU) {
+            this.backgroundImage.resize(windowWidth, windowHeight);
+            image(this.backgroundImage, X, Y);
+            image(this.playButtonImage, this.playButtonCoordinates[0] * windowWidth, this.playButtonCoordinates[1] * windowHeight);
+            image(this.rulesButtonImage, this.rulesButtonCoordinates[0] * windowWidth, this.rulesButtonCoordinates[1] * windowHeight);
+        }
+        else if (this.currentMenuState == Page.RULES) {
+            this.rulesBackgroundImage.resize(windowWidth, windowHeight);
+            image(this.rulesBackgroundImage, X, Y);
+            image(this.backButtonImage, this.backButtonCoordinates[0] * windowWidth, this.backButtonCoordinates[1] * windowHeight);
+        }
     };
     return Menu;
 }());

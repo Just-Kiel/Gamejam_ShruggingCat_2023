@@ -13,7 +13,6 @@
 // -------------------
 //       Variables
 // -------------------
-let imageTest;
 let menu : Menu;
 
 // -------------------
@@ -33,7 +32,7 @@ function draw() {
 function setup() {
     p6_CreateCanvas()
 
-    menu = new Menu([0.55, 0.65], [0.56, 0.78]);
+    menu = new Menu([0.55, 0.65], [0.56, 0.78], [0, 0]);
     menu.OnLoad();
 }
 
