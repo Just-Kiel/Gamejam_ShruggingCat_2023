@@ -66,14 +66,15 @@ class CVFX extends CAnimation {
     //int R
     //int G
     //int B
-    OnLoad(file : string, width, height, maxFrames, R=0, G=0, B=0) {
+    OnLoad(file : string, width, height, maxFrames) {
+
+        this.Surf_VFX = CSurface.OnLoad(file);
+
         this.nbW = this.Surf_VFX.w / width;
         this.width = width;
         this.height = height;
         
         this.maxFrames = maxFrames;
-        
-        return true;
     }
 
     OnRender() {
