@@ -1,13 +1,5 @@
-var gui = new dat.GUI();
-var params = {
-    Ellipse_Size: 30,
-    Download_Image: function () { return save(); },
-};
-gui.add(params, "Ellipse_Size", 0, 100, 1);
-gui.add(params, "Download_Image");
 function draw() {
     background("black");
-    ellipse(mouseX, mouseY, params.Ellipse_Size);
 }
 function setup() {
     p6_CreateCanvas();
