@@ -108,8 +108,11 @@ var CApp = (function () {
         this.inGame = false;
         this.inVictory = false;
         this.inDefeat = false;
+        this.staticElements = [];
+        this.ratioStaticElements = [];
     }
     CApp.prototype.OnInit = function () {
+        var _this = this;
         this.Walter = new CPlayer();
         this.Walter.OnLoad("./src/assets/PKM_1.png", 32, 32, 2);
         this.menu = new Menu([0.55, 0.65], [0.56, 0.78], [0, 0]);
@@ -117,6 +120,22 @@ var CApp = (function () {
         this.Walter.X = mouseX;
         this.Walter.Y = mouseY;
         CEntity.EntityList[0] = this.Walter;
+        this.staticElements = [
+            "./src/assets/game_background.png",
+            "./src/assets/desk.png",
+            "./src/assets/window_day.png",
+            "./src/assets/computer.png"
+        ];
+        var _loop_1 = function (index) {
+            var element = this_1.staticElements[index];
+            this_1.staticElements[index] = loadImage(element, function () {
+                _this.ratioStaticElements.push([_this.staticElements[index].width / 1920, _this.staticElements[index].height / 1080]);
+            });
+        };
+        var this_1 = this;
+        for (var index = 0; index < this.staticElements.length; index++) {
+            _loop_1(index);
+        }
     };
     CApp.prototype.OnLoop = function () {
         CFPS.FPSControl.OnLoop();
@@ -135,6 +154,7 @@ var CApp = (function () {
             this.menu.OnDraw(0, 0);
         }
         if (this.inGame) {
+            this.GameStaticElements();
             for (var i = 0; i < 1; i++) {
                 CEntity.EntityList[i].OnRender();
                 this.Walter.OnRender();
@@ -144,6 +164,16 @@ var CApp = (function () {
         }
         else if (this.inDefeat) {
         }
+    };
+    CApp.prototype.GameStaticElements = function () {
+        this.staticElements[0].resize(windowWidth, windowHeight);
+        image(this.staticElements[0], 0, 0);
+        this.staticElements[1].resize(windowWidth * this.ratioStaticElements[1][0], windowHeight * this.ratioStaticElements[1][1]);
+        image(this.staticElements[1], 0, windowHeight - this.staticElements[1].height);
+        this.staticElements[2].resize(windowWidth * this.ratioStaticElements[2][0], windowHeight * this.ratioStaticElements[2][1]);
+        image(this.staticElements[2], windowWidth - this.staticElements[2].width, 0.15 * windowHeight);
+        this.staticElements[3].resize(windowWidth * this.ratioStaticElements[3][0], windowHeight * this.ratioStaticElements[3][1]);
+        image(this.staticElements[3], windowWidth * 0.1, 0.15 * windowHeight);
     };
     return CApp;
 }());

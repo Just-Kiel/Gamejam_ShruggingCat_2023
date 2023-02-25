@@ -79,11 +79,16 @@ class CApp {
     //bool 
     inDefeat;
     
+    staticElements
+    ratioStaticElements;
+
     constructor(){
         this.inMenu = true;
         this.inGame = false;
         this.inVictory = false;
         this.inDefeat = false;
+        this.staticElements = [];
+        this.ratioStaticElements = [];
     } 
     
     OnInit() {
@@ -100,6 +105,21 @@ class CApp {
         this.Walter.X = mouseX;
         this.Walter.Y= mouseY;
         CEntity.EntityList[0] = this.Walter;
+
+        // Load des images du jeu
+        this.staticElements = [
+            "./src/assets/game_background.png",
+            "./src/assets/desk.png",
+            "./src/assets/window_day.png",
+            "./src/assets/computer.png"
+        ]
+
+        for (let index = 0; index < this.staticElements.length; index++) {
+            const element = this.staticElements[index];
+            this.staticElements[index] = loadImage(element, () => {
+                this.ratioStaticElements.push([this.staticElements[index].width/1920, this.staticElements[index].height/1080])
+            })
+        }
     }
 
     OnLoop() {
@@ -125,6 +145,7 @@ class CApp {
         }
         
         if (this.inGame) {
+            this.GameStaticElements()
             for (let i = 0; i < 1; i++) {
                 
                 CEntity.EntityList[i].OnRender();
@@ -139,6 +160,22 @@ class CApp {
             //DEFEAT ON RENDER
         }
     }
-    
+
+    GameStaticElements(){
+        this.staticElements[0].resize(windowWidth, windowHeight);
+        image(this.staticElements[0], 0, 0);
+        
+        // desk
+        this.staticElements[1].resize(windowWidth*this.ratioStaticElements[1][0], windowHeight*this.ratioStaticElements[1][1]);
+        image(this.staticElements[1], 0, windowHeight-this.staticElements[1].height);
+        
+        // window
+        this.staticElements[2].resize(windowWidth*this.ratioStaticElements[2][0], windowHeight*this.ratioStaticElements[2][1]);
+        image(this.staticElements[2], windowWidth-this.staticElements[2].width, 0.15*windowHeight);
+
+        // computer
+        this.staticElements[3].resize(windowWidth*this.ratioStaticElements[3][0], windowHeight*this.ratioStaticElements[3][1]);
+        image(this.staticElements[3], windowWidth*0.1, 0.15*windowHeight);
+    }   
 };
     
