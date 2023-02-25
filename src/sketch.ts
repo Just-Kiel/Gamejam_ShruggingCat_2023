@@ -14,16 +14,16 @@
 //       Variables
 // -------------------
 let imageTest;
+let menu : Menu;
 
 // -------------------
 //       Drawing
 // -------------------
 
 function draw() {
-    background("black")
-    drawPartOfImage(imageTest, 600, 250, 50, 50)
+    clear()
 
-    image(imageTest, 0, 0)
+    menu.OnDraw(0, 0)
 }
 
 // -------------------
@@ -33,14 +33,10 @@ function draw() {
 function setup() {
     p6_CreateCanvas()
 
-    // need to add ./src/assets
-    imageTest = generateImage("./src/assets/test_image.png")
-    // imageTest = generateImage("https://cdn.pixabay.com/photo/2015/10/01/17/17/car-967387__480.png")
+    menu = new Menu([0.55, 0.65], [0.56, 0.78]);
+    menu.OnLoad();
 }
 
 function windowResized() {
     p6_ResizeCanvas()
 }
-
-// load image + return image stockée dans les classes concernées
-// regles on les affiche où ?

@@ -1,12 +1,13 @@
 var imageTest;
+var menu;
 function draw() {
-    background("black");
-    drawPartOfImage(imageTest, 600, 250, 50, 50);
-    image(imageTest, 0, 0);
+    clear();
+    menu.OnDraw(0, 0);
 }
 function setup() {
     p6_CreateCanvas();
-    imageTest = generateImage("./src/assets/test_image.png");
+    menu = new Menu([0.55, 0.65], [0.56, 0.78]);
+    menu.OnLoad();
 }
 function windowResized() {
     p6_ResizeCanvas();
@@ -215,6 +216,38 @@ function drawPartOfImage(srcImage, x, y, width, height) {
     var cutSpriteSheet = srcImage.get(x, y, width, height);
     image(cutSpriteSheet, 0, 0);
 }
+var Page;
+(function (Page) {
+    Page[Page["MENU"] = 0] = "MENU";
+    Page[Page["RULES"] = 1] = "RULES";
+    Page[Page["GAME"] = 2] = "GAME";
+})(Page || (Page = {}));
+;
+var Menu = (function () {
+    function Menu(_a, _b) {
+        var xPlayButton = _a[0], yPlayButton = _a[1];
+        var xRulesButton = _b[0], yRulesButton = _b[1];
+        this.currentMenuState = Page.MENU;
+        this.backgroundImage = "./src/assets/background_menu.png";
+        this.playButtonImage = "./src/assets/play_button.png";
+        this.rulesButtonImage = "./src/assets/rules_button.png";
+        this.playButtonCoordinates = [xPlayButton, yPlayButton];
+        this.rulesButtonCoordinates = [xRulesButton, yRulesButton];
+    }
+    Menu.prototype.OnLoad = function () {
+        this.backgroundImage = loadImage(this.backgroundImage);
+        this.playButtonImage = loadImage(this.playButtonImage);
+        this.rulesButtonImage = loadImage(this.rulesButtonImage);
+    };
+    Menu.prototype.OnDraw = function (X, Y) {
+        this.backgroundImage.resize(windowWidth, windowHeight);
+        image(this.backgroundImage, X, Y);
+        image(this.playButtonImage, this.playButtonCoordinates[0] * windowWidth, this.playButtonCoordinates[1] * windowHeight);
+        image(this.rulesButtonImage, this.rulesButtonCoordinates[0] * windowWidth, this.rulesButtonCoordinates[1] * windowHeight);
+    };
+    return Menu;
+}());
+;
 var CSurface = (function () {
     function CSurface() {
     }
