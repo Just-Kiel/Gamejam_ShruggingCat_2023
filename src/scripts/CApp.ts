@@ -1,3 +1,14 @@
+//Permet de differencier les moments du jeu
+enum StateOfGame {
+    WORKING = 0,
+    TINDER,
+    PLANT,
+    CATFLIX,
+    YARN
+};
+
+let countYarn;
+
 function keyPressed() {
     if (theApp.inMiniGame == StateOfGame.YARN) {
         if (countYarn == undefined) {
@@ -27,6 +38,7 @@ function keyPressed() {
         print("Yarn count :" + countYarn)
     }
 
+
     if (theApp.inMiniGame == StateOfGame.PLANT) {
         // wait W
     }
@@ -52,6 +64,10 @@ function keyReleased() {
         //DO SOMETHING
       } else if (keyCode === RIGHT_ARROW) {
         //DO SOMETHING
+      } else if (theApp.inMiniGame != StateOfGame.WORKING && key == ' ') {
+        print("Back to work")
+        theApp.inMiniGame = StateOfGame.WORKING
+        countYarn = 0;
       }
 }
 
@@ -79,6 +95,10 @@ function mouseClicked(){
             if(mouseX >= bboxes[0][0] && mouseX <= bboxes[0][1] && mouseY >= bboxes[0][2] && mouseY <= bboxes[0][3]){
                 theApp.inGame = true;
                 theApp.inMenu = false;
+
+                theApp.clock = new Timer()
+                theApp.clock.Start()
+                theApp.clock.OnLoad()
             }
 
             //rules button
@@ -163,7 +183,7 @@ function mouseClicked(){
 class CApp {
     //VFX_FW : CVFX; //VFX example
     
-    //clock : Timer; //Timer example
+    clock : Timer; //Timer example
     Walter : CPlayer;
     Computer : CObject;
     Plant : CObject;
@@ -184,8 +204,10 @@ class CApp {
     ratioStaticElements;
 
     bboxesInteractablesElements;
+    inMiniGame;
 
     yarnState; // full :1 and empty :0
+
     plantState; // watered :1 and not :0
 
     // int
@@ -198,9 +220,9 @@ class CApp {
         this.inDefeat = false;
         this.staticElements = [];
         this.inMiniGame = StateOfGame.WORKING;
-        this.points = 0;
 
         this.yarnState = 1;
+        this.points = 0;
         this.plantState = 1;
     } 
     
@@ -213,7 +235,8 @@ class CApp {
             "./src/assets/window_day.png",
             "./src/assets/computer.png",
             "./src/assets/phone.png",
-            "./src/assets/plant.png"
+            "./src/assets/plant.png",
+            "./src/assets/yarn_completed.png"
         ]
 
         //Initialisation du joueur
@@ -234,9 +257,10 @@ class CApp {
             [0, 0],
             [0, 0],
             [0, 0.15],
-            [0.1, 0.18],
-            [0.6, 0.78],
-            [0.56, 0.43]
+            [0.1, 0.18], // computer
+            [0.6, 0.78], // phone
+            [0.56, 0.43], // plant
+            [0., 0.52] // yarn
         ]
 
         for (let index = 0; index < this.staticElements.length; index++) {
@@ -313,6 +337,7 @@ class CApp {
             // TODO if GameState == CATFLIX : changer screen pc
 
             this.GameStaticElements()
+            this.clock.ShowClock();
             for (let i = 0; i < this.ENTITY; i++) {
                 CEntity.EntityList[i].OnRender();
             }
@@ -333,7 +358,7 @@ class CApp {
         image(this.staticElements[1], 0, windowHeight-this.staticElements[1].height);
         
         // window
-        image(this.staticElements[2], windowWidth-this.staticElements[2].width, 0.15*windowHeight);
+        CSurface.OnDraw(this.staticElements[2], windowWidth-this.staticElements[2].width, 0.15*windowHeight, 0, this.staticElements[2].height/3 * Math.floor((this.clock.Get_ticks()*3) / (120 *1000)), this.staticElements[2].width, this.staticElements[2].height/3)
 
         // computer
         // image(this.staticElements[3], windowWidth*this.staticElementsCoordinates[3][0], this.staticElementsCoordinates[3][1]*windowHeight);
@@ -343,8 +368,16 @@ class CApp {
 
         // plant
         //image(this.staticElements[5], windowWidth*this.staticElementsCoordinates[5][0], this.staticElementsCoordinates[5][1]*windowHeight);
-    }   
+
+        // yarn
+        image(this.staticElements[6], windowWidth*this.staticElementsCoordinates[6][0], this.staticElementsCoordinates[6][1]*windowHeight);
+    }
 };
+
+// faire les interactions de chaque mini jeu (starting by la pelote)
+// Pelote : if pelote plein (clic gauche pour distraire) and then vide and back to work --> DONE
+//          if vide (8 fleches : suivre la sprite if wrong no problem) and then pleine and back to work --> DONE
+    
 
 // faire les interactions de chaque mini jeu (starting by la pelote)
 // Pelote : if pelote plein (clic gauche pour distraire) and then vide and back to work --> DONE
