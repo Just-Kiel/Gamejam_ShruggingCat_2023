@@ -359,7 +359,7 @@ class CApp {
         this.Tinder.OnLoad(this.staticElements[8], 482, 631, 1);
         
         //Initialisation du menu
-        this.menu = new Menu([0.55, 0.65], [0.56, 0.78],[0, 0]);
+        this.menu = new Menu([0.55, 0.65], [0.56, 0.78],[0.01, 0.015]);
         this.menu.OnLoad();
 
         this.staticElementsCoordinates = [

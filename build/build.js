@@ -310,7 +310,7 @@ var CApp = (function () {
         this.Yarn.OnLoad(this.staticElements[6], 199, 254, 1);
         this.Tinder = new CObject();
         this.Tinder.OnLoad(this.staticElements[8], 482, 631, 1);
-        this.menu = new Menu([0.55, 0.65], [0.56, 0.78], [0, 0]);
+        this.menu = new Menu([0.55, 0.65], [0.56, 0.78], [0.01, 0.015]);
         this.menu.OnLoad();
         this.staticElementsCoordinates = [
             [0, 0],
