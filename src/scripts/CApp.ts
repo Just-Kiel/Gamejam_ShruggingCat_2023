@@ -145,7 +145,7 @@ function calculateBBOXES(elements){
 
 function mouseClicked(){
     if(theApp.inMenu){
-        if (theApp.menu.currentMenuState == Page.GAMEOVER || theApp.menu.currentMenuState == Page.GOODOVER){
+        if (theApp.menu.currentMenuState == Page.GAMEOVER || theApp.menu.currentMenuState == Page.GOODOVER || theApp.menu.currentMenuState == Page.MIDDLEOVER){
             theApp.inDefeat = false
             theApp.menu.currentMenuState = DetectButtonToMainMenu(theApp.menu)
         }
@@ -248,16 +248,6 @@ function mouseClicked(){
             theApp.Computer.currentFrameRow = (theApp.Computer.currentFrameRow+1) %2;
 
             theApp.points += 30
-        }
-
-        if (mouseButton === LEFT) {
-            //X = MouseX Y = MouseY
-        }
-        if (mouseButton === RIGHT) {
-            //DO SOMETHING
-        }
-        if (mouseButton === CENTER) {
-            //DO SOMETHING
         }
     }
 }
@@ -543,6 +533,12 @@ class CApp {
 
                 this.inMenu = true
                 this.menu.currentMenuState = Page.GOODOVER
+
+                if (this.points > 700){
+                    this.menu.currentMenuState = Page.GOODOVER
+                } else {
+                    this.menu.currentMenuState = Page.MIDDLEOVER
+                }
             }
             
             this.GameStaticElements()

@@ -180,7 +180,7 @@ function calculateBBOXES(elements) {
 }
 function mouseClicked() {
     if (theApp.inMenu) {
-        if (theApp.menu.currentMenuState == Page.GAMEOVER || theApp.menu.currentMenuState == Page.GOODOVER) {
+        if (theApp.menu.currentMenuState == Page.GAMEOVER || theApp.menu.currentMenuState == Page.GOODOVER || theApp.menu.currentMenuState == Page.MIDDLEOVER) {
             theApp.inDefeat = false;
             theApp.menu.currentMenuState = DetectButtonToMainMenu(theApp.menu);
         }
@@ -258,12 +258,6 @@ function mouseClicked() {
             theApp.Computer.currentFrameCol = 1;
             theApp.Computer.currentFrameRow = (theApp.Computer.currentFrameRow + 1) % 2;
             theApp.points += 30;
-        }
-        if (mouseButton === LEFT) {
-        }
-        if (mouseButton === RIGHT) {
-        }
-        if (mouseButton === CENTER) {
         }
     }
 }
@@ -461,6 +455,12 @@ var CApp = (function () {
                 this.inGame = false;
                 this.inMenu = true;
                 this.menu.currentMenuState = Page.GOODOVER;
+                if (this.points > 700) {
+                    this.menu.currentMenuState = Page.GOODOVER;
+                }
+                else {
+                    this.menu.currentMenuState = Page.MIDDLEOVER;
+                }
             }
             this.GameStaticElements();
             this.clock.ShowClock();
@@ -677,6 +677,7 @@ var Page;
     Page[Page["RULES"] = 1] = "RULES";
     Page[Page["GAMEOVER"] = 2] = "GAMEOVER";
     Page[Page["GOODOVER"] = 3] = "GOODOVER";
+    Page[Page["MIDDLEOVER"] = 4] = "MIDDLEOVER";
 })(Page || (Page = {}));
 ;
 function DetectButtonToMainMenu(menu) {
@@ -706,11 +707,13 @@ var Menu = (function () {
         this.finalImages = [
             "./src/assets/gameover.png",
             "./src/assets/main_menu.png",
-            "./src/assets/goodend.png"
+            "./src/assets/goodend.png",
+            "./src/assets/middleend.png"
         ];
         this.finalCoordinates = [
             [0, 0],
             [0.7, 0.8],
+            [0, 0],
             [0, 0]
         ];
     }
@@ -750,6 +753,10 @@ var Menu = (function () {
         }
         else if (this.currentMenuState == Page.GOODOVER) {
             image(this.finalImages[2], this.finalCoordinates[2][0] * windowWidth, this.finalCoordinates[2][1] * windowHeight);
+            image(this.finalImages[1], this.finalCoordinates[1][0] * windowWidth, this.finalCoordinates[1][1] * windowHeight);
+        }
+        else if (this.currentMenuState == Page.MIDDLEOVER) {
+            image(this.finalImages[3], this.finalCoordinates[3][0] * windowWidth, this.finalCoordinates[3][1] * windowHeight);
             image(this.finalImages[1], this.finalCoordinates[1][0] * windowWidth, this.finalCoordinates[1][1] * windowHeight);
         }
     };
