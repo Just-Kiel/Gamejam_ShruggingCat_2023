@@ -1,7 +1,7 @@
 //Le Timer
 class Timer {
     
-        //Le temps quand le tomer est lance
+        //Le temps quand le timer est lance
         //int 
         startTicks;
         //Le temps enregistre quand le Timer a ete mis en pause
@@ -13,6 +13,10 @@ class Timer {
         paused;
         //bool 
         started;
+
+        // horloge
+        clockImage;
+        clockCoordinates;
         
         //Initialise les variables
         constructor() {
@@ -20,6 +24,27 @@ class Timer {
             this.pausedTicks = 0;
             this.paused = false;
             this.started = false;
+            this.clockImage = "./src/assets/clock.png"
+
+            this.clockCoordinates = [0.6, 0.1]
+        }
+
+        OnLoad(){
+            this.clockImage = loadImage(this.clockImage, () => {
+                this.clockImage.resize(windowWidth*this.clockImage.width/1920, windowHeight*this.clockImage.height/1080)
+            })
+        }
+
+        ShowClock(){
+            image(this.clockImage, this.clockCoordinates[0]*windowWidth, this.clockCoordinates[1]*windowHeight);
+
+            push();
+            strokeWeight(10)
+            stroke(73, 72, 70)
+            translate(this.clockCoordinates[0]*windowWidth + (this.clockImage.width/2), this.clockCoordinates[1]*windowHeight + (this.clockImage.height/2))
+            rotate(PI+ (2*PI * this.Get_ticks()/ 120000));
+            line(0, 50, 0, 0);
+            pop();
         }
         
         //Les différentes actions du Timer

@@ -82,6 +82,9 @@ function mouseClicked() {
             if (mouseX >= bboxes[0][0] && mouseX <= bboxes[0][1] && mouseY >= bboxes[0][2] && mouseY <= bboxes[0][3]) {
                 theApp.inGame = true;
                 theApp.inMenu = false;
+                theApp.clock = new Timer();
+                theApp.clock.Start();
+                theApp.clock.OnLoad();
             }
             if (mouseX >= bboxes[1][0] && mouseX <= bboxes[1][1] && mouseY >= bboxes[1][2] && mouseY <= bboxes[1][3]) {
                 theApp.menu.currentMenuState = Page.RULES;
@@ -109,7 +112,6 @@ var CApp = (function () {
         this.inVictory = false;
         this.inDefeat = false;
         this.staticElements = [];
-        this.ratioStaticElements = [];
     }
     CApp.prototype.OnInit = function () {
         var _this = this;
@@ -126,7 +128,8 @@ var CApp = (function () {
             "./src/assets/window_day.png",
             "./src/assets/computer.png",
             "./src/assets/phone.png",
-            "./src/assets/plant_grown.png"
+            "./src/assets/plant_grown.png",
+            "./src/assets/yarn_completed.png"
         ];
         this.staticElementsCoordinates = [
             [0, 0],
@@ -134,13 +137,13 @@ var CApp = (function () {
             [0, 0.15],
             [0.1, 0.18],
             [0.6, 0.78],
-            [0.56, 0.43]
+            [0.56, 0.43],
+            [0., 0.52]
         ];
         var _loop_1 = function (index) {
             var element = this_1.staticElements[index];
             this_1.staticElements[index] = loadImage(element, function () {
-                _this.ratioStaticElements.push([_this.staticElements[index].width / 1920, _this.staticElements[index].height / 1080]);
-                _this.staticElements[index].resize(windowWidth * _this.ratioStaticElements[index][0], windowHeight * _this.ratioStaticElements[index][1]);
+                _this.staticElements[index].resize(windowWidth * _this.staticElements[index].width / 1920, windowHeight * _this.staticElements[index].height / 1080);
             });
         };
         var this_1 = this;
@@ -167,7 +170,12 @@ var CApp = (function () {
             this.menu.OnDraw(0, 0);
         }
         if (this.inGame) {
+            if (this.clock.Get_ticks() > 1000 * 120) {
+                this.inGame = false;
+                this.inMenu = true;
+            }
             this.GameStaticElements();
+            this.clock.ShowClock();
             for (var i = 0; i < 1; i++) {
                 CEntity.EntityList[i].OnRender();
                 this.Walter.OnRender();
@@ -181,10 +189,11 @@ var CApp = (function () {
     CApp.prototype.GameStaticElements = function () {
         image(this.staticElements[0], 0, 0);
         image(this.staticElements[1], 0, windowHeight - this.staticElements[1].height);
-        image(this.staticElements[2], windowWidth - this.staticElements[2].width, 0.15 * windowHeight);
+        CSurface.OnDraw(this.staticElements[2], windowWidth - this.staticElements[2].width, 0.15 * windowHeight, 0, this.staticElements[2].height / 3 * Math.floor((this.clock.Get_ticks() * 3) / (120 * 1000)), this.staticElements[2].width, this.staticElements[2].height / 3);
         image(this.staticElements[3], windowWidth * this.staticElementsCoordinates[3][0], this.staticElementsCoordinates[3][1] * windowHeight);
         image(this.staticElements[4], windowWidth * this.staticElementsCoordinates[4][0], this.staticElementsCoordinates[4][1] * windowHeight);
         image(this.staticElements[5], windowWidth * this.staticElementsCoordinates[5][0], this.staticElementsCoordinates[5][1] * windowHeight);
+        image(this.staticElements[6], windowWidth * this.staticElementsCoordinates[6][0], this.staticElementsCoordinates[6][1] * windowHeight);
     };
     return CApp;
 }());
@@ -384,7 +393,7 @@ var Menu = (function () {
         this.playButtonImage = "./src/assets/play_button.png";
         this.rulesButtonImage = "./src/assets/rules_button.png";
         this.rulesBackgroundImage = "./src/assets/rules.png";
-        this.backButtonImage = "./src/assets/cursor.png";
+        this.backButtonImage = "./src/assets/back_button.png";
         this.playButtonCoordinates = [xPlayButton, yPlayButton];
         this.rulesButtonCoordinates = [xRulesButton, yRulesButton];
         this.backButtonCoordinates = [xBackButton, yBackButton];
@@ -458,7 +467,25 @@ var Timer = (function () {
         this.pausedTicks = 0;
         this.paused = false;
         this.started = false;
+        this.clockImage = "./src/assets/clock.png";
+        this.clockCoordinates = [0.6, 0.1];
     }
+    Timer.prototype.OnLoad = function () {
+        var _this = this;
+        this.clockImage = loadImage(this.clockImage, function () {
+            _this.clockImage.resize(windowWidth * _this.clockImage.width / 1920, windowHeight * _this.clockImage.height / 1080);
+        });
+    };
+    Timer.prototype.ShowClock = function () {
+        image(this.clockImage, this.clockCoordinates[0] * windowWidth, this.clockCoordinates[1] * windowHeight);
+        push();
+        strokeWeight(10);
+        stroke(73, 72, 70);
+        translate(this.clockCoordinates[0] * windowWidth + (this.clockImage.width / 2), this.clockCoordinates[1] * windowHeight + (this.clockImage.height / 2));
+        rotate(PI + (2 * PI * this.Get_ticks() / 120000));
+        line(0, 50, 0, 0);
+        pop();
+    };
     Timer.prototype.Start = function () {
         this.started = true;
         this.paused = false;

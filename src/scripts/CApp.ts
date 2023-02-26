@@ -38,6 +38,10 @@ function mouseClicked(){
             if(mouseX >= bboxes[0][0] && mouseX <= bboxes[0][1] && mouseY >= bboxes[0][2] && mouseY <= bboxes[0][3]){
                 theApp.inGame = true;
                 theApp.inMenu = false;
+
+                theApp.clock = new Timer()
+                theApp.clock.Start()
+                theApp.clock.OnLoad()
             }
 
             //rules button
@@ -66,7 +70,7 @@ function mouseClicked(){
 class CApp {
     //VFX_FW : CVFX; //VFX example
     
-    //clock : Timer; //Timer example
+    clock : Timer; //Timer example
     Walter : CPlayer;
     menu : Menu;
     
@@ -81,7 +85,6 @@ class CApp {
     
     staticElements
     staticElementsCoordinates
-    ratioStaticElements;
 
     bboxesInteractablesElements;
 
@@ -91,7 +94,6 @@ class CApp {
         this.inVictory = false;
         this.inDefeat = false;
         this.staticElements = [];
-        this.ratioStaticElements = [];
     } 
     
     OnInit() {
@@ -116,23 +118,24 @@ class CApp {
             "./src/assets/window_day.png",
             "./src/assets/computer.png",
             "./src/assets/phone.png",
-            "./src/assets/plant_grown.png"
+            "./src/assets/plant_grown.png",
+            "./src/assets/yarn_completed.png"
         ]
 
         this.staticElementsCoordinates = [
             [0, 0],
             [0, 0],
             [0, 0.15],
-            [0.1, 0.18],
-            [0.6, 0.78],
-            [0.56, 0.43]
+            [0.1, 0.18], // computer
+            [0.6, 0.78], // phone
+            [0.56, 0.43], // plant
+            [0., 0.52] // yarn
         ]
 
         for (let index = 0; index < this.staticElements.length; index++) {
             const element = this.staticElements[index];
             this.staticElements[index] = loadImage(element, () => {
-                this.ratioStaticElements.push([this.staticElements[index].width/1920, this.staticElements[index].height/1080])
-                this.staticElements[index].resize(windowWidth*this.ratioStaticElements[index][0], windowHeight*this.ratioStaticElements[index][1]);
+                this.staticElements[index].resize(windowWidth*this.staticElements[index].width/1920, windowHeight*this.staticElements[index].height/1080);
             })
         }
 
@@ -164,7 +167,15 @@ class CApp {
         }
         
         if (this.inGame) {
+            if (this.clock.Get_ticks() > 1000*120){
+                this.inGame = false;
+
+                // temp go to menu
+                this.inMenu = true
+            }
+
             this.GameStaticElements()
+            this.clock.ShowClock();
             for (let i = 0; i < 1; i++) {
                 
                 CEntity.EntityList[i].OnRender();
@@ -185,10 +196,10 @@ class CApp {
         
         // desk
         image(this.staticElements[1], 0, windowHeight-this.staticElements[1].height);
-        
-        // window
-        image(this.staticElements[2], windowWidth-this.staticElements[2].width, 0.15*windowHeight);
 
+        // window
+        CSurface.OnDraw(this.staticElements[2], windowWidth-this.staticElements[2].width, 0.15*windowHeight, 0, this.staticElements[2].height/3 * Math.floor((this.clock.Get_ticks()*3) / (120 *1000)), this.staticElements[2].width, this.staticElements[2].height/3)
+        
         // computer
         image(this.staticElements[3], windowWidth*this.staticElementsCoordinates[3][0], this.staticElementsCoordinates[3][1]*windowHeight);
 
@@ -197,6 +208,11 @@ class CApp {
 
         // plant
         image(this.staticElements[5], windowWidth*this.staticElementsCoordinates[5][0], this.staticElementsCoordinates[5][1]*windowHeight);
+
+        // yarn
+        image(this.staticElements[6], windowWidth*this.staticElementsCoordinates[6][0], this.staticElementsCoordinates[6][1]*windowHeight);
     }   
+
+    // TODO resize
 };
     
