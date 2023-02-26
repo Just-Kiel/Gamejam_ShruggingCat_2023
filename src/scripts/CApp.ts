@@ -80,7 +80,10 @@ class CApp {
     inDefeat;
     
     staticElements
+    staticElementsCoordinates
     ratioStaticElements;
+
+    bboxesInteractablesElements;
 
     constructor(){
         this.inMenu = true;
@@ -111,15 +114,31 @@ class CApp {
             "./src/assets/game_background.png",
             "./src/assets/desk.png",
             "./src/assets/window_day.png",
-            "./src/assets/computer.png"
+            "./src/assets/computer.png",
+            "./src/assets/phone.png",
+            "./src/assets/plant_grown.png"
+        ]
+
+        this.staticElementsCoordinates = [
+            [0, 0],
+            [0, 0],
+            [0, 0.15],
+            [0.1, 0.18],
+            [0.6, 0.78],
+            [0.56, 0.43]
         ]
 
         for (let index = 0; index < this.staticElements.length; index++) {
             const element = this.staticElements[index];
             this.staticElements[index] = loadImage(element, () => {
                 this.ratioStaticElements.push([this.staticElements[index].width/1920, this.staticElements[index].height/1080])
+                this.staticElements[index].resize(windowWidth*this.ratioStaticElements[index][0], windowHeight*this.ratioStaticElements[index][1]);
             })
         }
+
+        //Calculate bboxes for interactable objects
+        let elements = [this.staticElements[3], this.staticElementsCoordinates[3], this.staticElements[4], this.staticElementsCoordinates[4], this.staticElements[5], this.staticElementsCoordinates[5]]
+        this.bboxesInteractablesElements = calculateBBOXES(elements)
     }
 
     OnLoop() {
@@ -162,20 +181,22 @@ class CApp {
     }
 
     GameStaticElements(){
-        this.staticElements[0].resize(windowWidth, windowHeight);
         image(this.staticElements[0], 0, 0);
         
         // desk
-        this.staticElements[1].resize(windowWidth*this.ratioStaticElements[1][0], windowHeight*this.ratioStaticElements[1][1]);
         image(this.staticElements[1], 0, windowHeight-this.staticElements[1].height);
         
         // window
-        this.staticElements[2].resize(windowWidth*this.ratioStaticElements[2][0], windowHeight*this.ratioStaticElements[2][1]);
         image(this.staticElements[2], windowWidth-this.staticElements[2].width, 0.15*windowHeight);
 
         // computer
-        this.staticElements[3].resize(windowWidth*this.ratioStaticElements[3][0], windowHeight*this.ratioStaticElements[3][1]);
-        image(this.staticElements[3], windowWidth*0.1, 0.15*windowHeight);
+        image(this.staticElements[3], windowWidth*this.staticElementsCoordinates[3][0], this.staticElementsCoordinates[3][1]*windowHeight);
+
+        // phone
+        image(this.staticElements[4], windowWidth*this.staticElementsCoordinates[4][0], this.staticElementsCoordinates[4][1]*windowHeight);
+
+        // plant
+        image(this.staticElements[5], windowWidth*this.staticElementsCoordinates[5][0], this.staticElementsCoordinates[5][1]*windowHeight);
     }   
 };
     
