@@ -231,6 +231,7 @@ function mouseClicked() {
             print("Throw Yarn ! Distract the boss");
             theApp.Yarn.currentFrameRow = 9;
             theApp.yarnState = 0;
+            tempoBoss = 0;
             theApp.bossVisible = false;
             countBoss.Stop();
             print("Go back before boss sees you");
@@ -263,6 +264,7 @@ function mouseClicked() {
     }
 }
 var countBoss;
+var tempoBoss = 0;
 var CApp = (function () {
     function CApp() {
         this.inMenu = true;
@@ -282,6 +284,7 @@ var CApp = (function () {
     CApp.prototype.OnInit = function () {
         var _this = this;
         countBoss = new Timer();
+        countBoss.Start();
         this.staticElements = [
             "./src/assets/game_background.png",
             "./src/assets/desk.png",
@@ -393,8 +396,8 @@ var CApp = (function () {
             this.progressBarPercentage = UpdatePercentage(this.progressBarPercentage);
             if (!this.bossVisible)
                 this.bossVisible = UpdateBossApparition(this.progressBarPercentage);
-            if (this.bossVisible && countBoss.Get_ticks() > 1000 * 3) {
-                countBoss.Stop();
+            if (this.bossVisible && countBoss.Get_ticks() > 1000 * tempoBoss) {
+                countBoss.Start();
                 this.bossVisible = false;
             }
             if (this.progressBarPercentage > 100) {
@@ -733,7 +736,11 @@ function UpdatePercentage(currentPercentage) {
     return newPercentage;
 }
 function UpdateBossApparition(currentPercentage) {
-    if (random(0, 100) < currentPercentage * 2 / 100) {
+    if (tempoBoss == 0) {
+        tempoBoss = random(1, 5 - (currentPercentage * 4 / 100));
+    }
+    else if (countBoss.Get_ticks() > tempoBoss * 1000 && !theApp.bossVisible) {
+        tempoBoss = 3;
         countBoss.Start();
         return true;
     }

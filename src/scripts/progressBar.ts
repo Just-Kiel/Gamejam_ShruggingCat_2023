@@ -12,7 +12,11 @@ function UpdatePercentage(currentPercentage){
 }
 
 function UpdateBossApparition(currentPercentage) {
-    if (random(0, 100) < currentPercentage*2/100){
+    if (tempoBoss == 0) {
+        tempoBoss = random(1, 5 - (currentPercentage*4/100));
+    }
+    else if (countBoss.Get_ticks() > tempoBoss*1000 && !theApp.bossVisible){
+        tempoBoss = 3;
         countBoss.Start()
         return true
     }

@@ -212,6 +212,7 @@ function mouseClicked(){
             theApp.Yarn.currentFrameRow = 9;
             theApp.yarnState = 0
 
+            tempoBoss = 0;
             theApp.bossVisible = false
             countBoss.Stop()
 
@@ -257,6 +258,7 @@ function mouseClicked(){
 }
 
 let countBoss : Timer;
+let tempoBoss = 0;
 class CApp {
     //VFX_FW : CVFX; //VFX example
     
@@ -322,6 +324,7 @@ class CApp {
     OnInit() {
         // Boss
         countBoss = new Timer()
+        countBoss.Start();
 
         // Load des images du jeu
         this.staticElements = [
@@ -454,8 +457,8 @@ class CApp {
 
             if (!this.bossVisible) this.bossVisible = UpdateBossApparition(this.progressBarPercentage)
 
-            if (this.bossVisible && countBoss.Get_ticks() > 1000*3) {
-                countBoss.Stop()
+            if (this.bossVisible && countBoss.Get_ticks() > 1000*tempoBoss) {
+                countBoss.Start()
 
                 this.bossVisible = false
             }
