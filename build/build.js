@@ -412,6 +412,30 @@ var Menu = (function () {
     return Menu;
 }());
 ;
+var CObject = (function (_super) {
+    __extends(CObject, _super);
+    function CObject() {
+        var _this = _super.call(this) || this;
+        _this.type = Type.ENTITY_TYPE_OBJECT;
+        _this.anim_Control.maxFrames = 0;
+        _this.anim_Control.SetFrameRate(0);
+        return _this;
+    }
+    CObject.prototype.OnLoad = function (File, Width, Height, maxFrames) {
+        _super.prototype.OnLoad.call(this, File, Width, Height, maxFrames);
+    };
+    CObject.prototype.OnLoop = function () {
+        _super.prototype.OnLoop.call(this);
+    };
+    CObject.prototype.OnRender = function () {
+        _super.prototype.OnRender.call(this);
+    };
+    CObject.prototype.OnAnimate = function () {
+        _super.prototype.OnAnimate.call(this);
+    };
+    return CObject;
+}(CEntity));
+;
 var CPlayer = (function (_super) {
     __extends(CPlayer, _super);
     function CPlayer() {
