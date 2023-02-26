@@ -292,7 +292,8 @@ class CApp {
             "./src/assets/plant.png",
             "./src/assets/yarn.png",
             "./src/assets/hands.png",
-            "./src/assets/tinder.png"
+            "./src/assets/tinder.png",
+            "./src/assets/boss.png"
         ]
 
         //Initialisation du joueur
@@ -321,7 +322,8 @@ class CApp {
             [0.56, 0.43], // plant
             [0., 0.52], // yarn
             [0.1, 0.65], // hands
-            [0.1, 0.45] // tinder
+            [0.1, 0.45], // tinder
+            [0.43, 0.3] // boss
         ]
 
         for (let index = 0; index < this.staticElements.length; index++) {
@@ -453,6 +455,9 @@ class CApp {
 
         // hands
         image(this.staticElements[7], windowWidth*this.staticElementsCoordinates[7][0], this.staticElementsCoordinates[7][1]*windowHeight);
+    
+        // boss
+        image(this.staticElements[9], windowWidth*this.staticElementsCoordinates[9][0], this.staticElementsCoordinates[9][1]*windowHeight);
     }
 };
 
