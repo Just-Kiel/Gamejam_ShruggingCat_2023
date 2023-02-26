@@ -61,7 +61,28 @@ var StateOfGame;
 ;
 var countYarn;
 var countWater;
+var countTinder;
 function keyPressed() {
+    if (theApp.inMiniGame == StateOfGame.TINDER) {
+        if (countTinder == undefined) {
+            countTinder = 0;
+        }
+        if (countTinder % 2 == 0 && keyCode == LEFT_ARROW) {
+            print("You swipped left");
+            countTinder++;
+            theApp.points += 2;
+        }
+        else if (countTinder % 2 == 1 && keyCode == RIGHT_ARROW) {
+            print("You swipped right");
+            countTinder++;
+            theApp.points += 2;
+        }
+        if (countTinder > 10) {
+            print("Go back to work before boss sees you !");
+            theApp.inMiniGame = StateOfGame.WORKING;
+            countTinder = 0;
+        }
+    }
     if (theApp.inMiniGame == StateOfGame.PLANT && key == "w") {
         if (countWater == undefined) {
             countWater = new Timer();
@@ -106,7 +127,9 @@ function keyPressed() {
             countYarn = 0;
             theApp.Yarn.currentFrameRow = 9;
         }
-        countWater.Stop();
+        if (theApp.inMiniGame == StateOfGame.PLANT) {
+            countWater.Stop();
+        }
         print("Your points are :" + theApp.points);
     }
 }
@@ -342,7 +365,6 @@ var CApp = (function () {
                 CEntity.EntityList[i].OnRender();
             }
             if (this.inMiniGame == StateOfGame.TINDER) {
-                print("oui");
                 image(theApp.staticElements[8], windowWidth * theApp.staticElementsCoordinates[8][0], theApp.staticElementsCoordinates[8][1] * windowHeight);
             }
         }
