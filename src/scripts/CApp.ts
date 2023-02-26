@@ -15,17 +15,17 @@ function keyPressed() {
             countYarn = 0
         }
 
-        // left : 0, 4
-        if ((countYarn == 0 || countYarn == 4) && keyCode === LEFT_ARROW) countYarn++;
+        // left : 3, 7
+        if ((countYarn == 3 || countYarn == 7) && keyCode === LEFT_ARROW) countYarn++;
 
-        // down : 1, 5
-        if ((countYarn == 1 || countYarn == 5) && keyCode === DOWN_ARROW) countYarn++;
+        // down : 2, 6
+        if ((countYarn == 2 || countYarn == 6) && keyCode === DOWN_ARROW) countYarn++;
 
-        // right: 2, 6
-        if ((countYarn == 2 || countYarn == 6) && keyCode === RIGHT_ARROW) countYarn++;
+        // right: 1, 5
+        if ((countYarn == 1 || countYarn == 5) && keyCode === RIGHT_ARROW) countYarn++;
     
-        // up   : 3, 7
-        if ((countYarn == 3 || countYarn == 7) && keyCode === UP_ARROW) countYarn++;
+        // up   : 0, 4
+        if ((countYarn == 0 || countYarn == 4) && keyCode === UP_ARROW) countYarn++;
 
         if (countYarn == 8) {
             print("Yarn now ready !")
@@ -33,6 +33,7 @@ function keyPressed() {
 
             print("Go back to work before boss sees you !")
             theApp.inMiniGame = StateOfGame.WORKING
+            countYarn = 0
         }
 
         print("Yarn count :" + countYarn)

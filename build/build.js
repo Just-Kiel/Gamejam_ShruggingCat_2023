@@ -65,19 +65,20 @@ function keyPressed() {
         if (countYarn == undefined) {
             countYarn = 0;
         }
-        if ((countYarn == 0 || countYarn == 4) && keyCode === LEFT_ARROW)
+        if ((countYarn == 3 || countYarn == 7) && keyCode === LEFT_ARROW)
             countYarn++;
-        if ((countYarn == 1 || countYarn == 5) && keyCode === DOWN_ARROW)
+        if ((countYarn == 2 || countYarn == 6) && keyCode === DOWN_ARROW)
             countYarn++;
-        if ((countYarn == 2 || countYarn == 6) && keyCode === RIGHT_ARROW)
+        if ((countYarn == 1 || countYarn == 5) && keyCode === RIGHT_ARROW)
             countYarn++;
-        if ((countYarn == 3 || countYarn == 7) && keyCode === UP_ARROW)
+        if ((countYarn == 0 || countYarn == 4) && keyCode === UP_ARROW)
             countYarn++;
         if (countYarn == 8) {
             print("Yarn now ready !");
             theApp.yarnState = 1;
             print("Go back to work before boss sees you !");
             theApp.inMiniGame = StateOfGame.WORKING;
+            countYarn = 0;
         }
         print("Yarn count :" + countYarn);
     }
