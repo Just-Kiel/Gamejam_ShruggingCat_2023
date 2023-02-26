@@ -57,6 +57,8 @@ function keyPressed() {
     }
 }
 function keyReleased() {
+    if (theApp.inMiniGame == StateOfGame.PLANT) {
+    }
     if (keyCode === LEFT_ARROW) {
     }
     else if (keyCode === RIGHT_ARROW) {
