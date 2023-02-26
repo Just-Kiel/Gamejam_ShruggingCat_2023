@@ -270,11 +270,6 @@ class CApp {
             })
         }
 
-        //Calculate bboxes for interactable objects
-        let elements = [this.staticElements[3], this.staticElementsCoordinates[3], this.staticElements[4], this.staticElementsCoordinates[4], this.staticElements[5], this.staticElementsCoordinates[5]]
-        this.bboxesInteractablesElements = calculateBBOXES(elements);
-
-
         
         //Placement et ajout du joueur dans les entites
         this.Computer.X = windowWidth*this.staticElementsCoordinates[3][0];

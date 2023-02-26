@@ -240,8 +240,6 @@ var CApp = (function () {
         for (var index = 0; index < this.staticElements.length; index++) {
             _loop_1(index);
         }
-        var elements = [this.staticElements[3], this.staticElementsCoordinates[3], this.staticElements[4], this.staticElementsCoordinates[4], this.staticElements[5], this.staticElementsCoordinates[5]];
-        this.bboxesInteractablesElements = calculateBBOXES(elements);
         this.Computer.X = windowWidth * this.staticElementsCoordinates[3][0];
         this.Computer.Y = windowHeight * this.staticElementsCoordinates[3][1];
         this.Computer.Owidth = 1628;
