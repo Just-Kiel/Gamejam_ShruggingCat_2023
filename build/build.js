@@ -72,6 +72,7 @@ function keyPressed() {
         if (countYarn == undefined) {
             countYarn = 0;
         }
+        theApp.Yarn.currentFrameRow = 8 - countYarn;
         if ((countYarn == 3 || countYarn == 7) && keyCode === LEFT_ARROW)
             countYarn++;
         if ((countYarn == 2 || countYarn == 6) && keyCode === DOWN_ARROW)
@@ -83,9 +84,14 @@ function keyPressed() {
         if (countYarn == 8) {
             print("Yarn now ready !");
             theApp.yarnState = 1;
+            theApp.Yarn.currentFrameRow = 9;
             print("Go back to work before boss sees you !");
             theApp.inMiniGame = StateOfGame.WORKING;
             countYarn = 0;
+            theApp.Yarn.currentFrameRow = 0;
+        }
+        else {
+            theApp.Yarn.currentFrameRow = 8 - countYarn;
         }
         print("Yarn count :" + countYarn);
     }
@@ -96,7 +102,10 @@ function keyPressed() {
     else if (theApp.inMiniGame != StateOfGame.WORKING && key == ' ') {
         print("Back to work");
         theApp.inMiniGame = StateOfGame.WORKING;
-        countYarn = 0;
+        if (theApp.yarnState != 1) {
+            countYarn = 0;
+            theApp.Yarn.currentFrameRow = 9;
+        }
         countWater.Stop();
         print("Your points are :" + theApp.points);
     }
@@ -179,13 +188,15 @@ function mouseClicked() {
                 theApp.inMiniGame = StateOfGame.YARN;
             }
         }
-        if (theApp.inMiniGame == StateOfGame.YARN) {
-            if (theApp.yarnState == 1) {
-                print("Throw Yarn ! Distract the boss");
-                theApp.yarnState = 0;
-                print("Go back before boss sees you");
-                theApp.inMiniGame = StateOfGame.WORKING;
-            }
+        if (theApp.inMiniGame == StateOfGame.YARN && theApp.yarnState == 1) {
+            print("Throw Yarn ! Distract the boss");
+            theApp.Yarn.currentFrameRow = 9;
+            theApp.yarnState = 0;
+            print("Go back before boss sees you");
+            theApp.inMiniGame = StateOfGame.WORKING;
+        }
+        if (theApp.inMiniGame == StateOfGame.YARN && theApp.yarnState == 0 && (countYarn == 0 || countYarn == undefined)) {
+            theApp.Yarn.currentFrameRow = 8;
         }
         if (theApp.inMiniGame == StateOfGame.PLANT) {
             if (theApp.plantState == 1) {
@@ -228,7 +239,7 @@ var CApp = (function () {
             "./src/assets/computer.png",
             "./src/assets/phone.png",
             "./src/assets/plant.png",
-            "./src/assets/yarn_completed.png",
+            "./src/assets/yarn.png",
             "./src/assets/hands.png"
         ];
         this.Walter = new CPlayer();
@@ -237,6 +248,8 @@ var CApp = (function () {
         this.Computer.OnLoad(this.staticElements[3], 814, 767, 1);
         this.Plant = new CObject();
         this.Plant.OnLoad(this.staticElements[5], 171, 316, 1);
+        this.Yarn = new CObject();
+        this.Yarn.OnLoad(this.staticElements[6], 199, 254, 1);
         this.menu = new Menu([0.55, 0.65], [0.56, 0.78], [0, 0]);
         this.menu.OnLoad();
         this.staticElementsCoordinates = [
@@ -274,14 +287,21 @@ var CApp = (function () {
         this.Plant.height *= windowHeight / 1080.0;
         this.Plant.currentFrameRow = 2;
         CEntity.EntityList[1] = this.Plant;
+        this.Yarn.X = windowWidth * this.staticElementsCoordinates[6][0];
+        this.Yarn.Y = windowHeight * this.staticElementsCoordinates[6][1];
+        this.Yarn.Owidth = 199;
+        this.Yarn.Oheight = 2540;
+        this.Yarn.width *= windowWidth / 1920.0;
+        this.Yarn.height *= windowHeight / 1080.0;
+        CEntity.EntityList[2] = this.Yarn;
         this.Walter.X = windowWidth * 0.1;
         this.Walter.Y = windowHeight * 0.18;
         this.Walter.Owidth = 128;
         this.Walter.Oheight = 256;
         this.Walter.width *= windowWidth / 1920.0;
         this.Walter.height *= windowHeight / 1080.0;
-        CEntity.EntityList[2] = this.Walter;
-        this.ENTITY = 3;
+        CEntity.EntityList[3] = this.Walter;
+        this.ENTITY = 4;
     };
     CApp.prototype.OnLoop = function () {
         CFPS.FPSControl.OnLoop();
@@ -330,7 +350,6 @@ var CApp = (function () {
         image(this.staticElements[1], 0, windowHeight - this.staticElements[1].height);
         CSurface.OnDraw(this.staticElements[2], windowWidth - this.staticElements[2].width, 0.15 * windowHeight, 0, this.staticElements[2].height / 3 * Math.floor((this.clock.Get_ticks() * 3) / (120 * 1000)), this.staticElements[2].width, this.staticElements[2].height / 3);
         image(this.staticElements[4], windowWidth * this.staticElementsCoordinates[4][0], this.staticElementsCoordinates[4][1] * windowHeight);
-        image(this.staticElements[6], windowWidth * this.staticElementsCoordinates[6][0], this.staticElementsCoordinates[6][1] * windowHeight);
         image(this.staticElements[7], windowWidth * this.staticElementsCoordinates[7][0], this.staticElementsCoordinates[7][1] * windowHeight);
     };
     return CApp;
