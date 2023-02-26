@@ -260,6 +260,7 @@ function mouseClicked() {
         }
     }
 }
+var countBoss;
 var CApp = (function () {
     function CApp() {
         this.inMenu = true;
@@ -271,9 +272,14 @@ var CApp = (function () {
         this.yarnState = 1;
         this.points = 0;
         this.plantState = 1;
+        this.progressBarImage = "./src/assets/progress.png";
+        this.progressBarCoordinates = [0.79, 0.02];
+        this.progressBarPercentage = 1;
+        this.bossVisible = false;
     }
     CApp.prototype.OnInit = function () {
         var _this = this;
+        countBoss = new Timer();
         this.staticElements = [
             "./src/assets/game_background.png",
             "./src/assets/desk.png",
@@ -287,6 +293,9 @@ var CApp = (function () {
             "./src/assets/boss.png",
             "./src/assets/space.png"
         ];
+        this.progressBarImage = loadImage(this.progressBarImage, function () {
+            _this.progressBarImage.resize(windowWidth * (_this.progressBarImage.width / 1920), windowHeight * (_this.progressBarImage.height / 1080));
+        });
         this.Walter = new CPlayer();
         this.Walter.OnLoad(this.staticElements[7], 869, 421, 2);
         this.Computer = new CObject();
@@ -379,10 +388,26 @@ var CApp = (function () {
                     countWater.Stop();
                 }
             }
+            this.progressBarPercentage = UpdatePercentage(this.progressBarPercentage);
+            if (!this.bossVisible)
+                this.bossVisible = UpdateBossApparition(this.progressBarPercentage);
+            if (this.bossVisible && countBoss.Get_ticks() > 1000 * 3) {
+                countBoss.Stop();
+                this.bossVisible = false;
+            }
+            if (this.progressBarPercentage > 100) {
+                this.inDefeat = true;
+                this.inGame = false;
+            }
+            if (this.inMiniGame != StateOfGame.WORKING && this.bossVisible && countBoss.Get_ticks() > 1000 * 1.5) {
+                this.inDefeat = true;
+                this.inGame = false;
+            }
         }
         if (this.inVictory) {
         }
         if (this.inDefeat) {
+            print("You loose");
         }
     };
     CApp.prototype.OnRender = function () {
@@ -405,6 +430,7 @@ var CApp = (function () {
             if (this.inMiniGame == StateOfGame.TINDER) {
                 theApp.Tinder.OnRender();
             }
+            CSurface.OnDraw(this.progressBarImage, (windowWidth * 0.995) - (this.progressBarPercentage * this.progressBarImage.width) / 100, this.progressBarCoordinates[1] * windowHeight, this.progressBarImage.width - (this.progressBarPercentage * this.progressBarImage.width / 100), 0, (this.progressBarPercentage * this.progressBarImage.width) / 100, this.progressBarImage.height);
         }
         if (this.inVictory) {
         }
@@ -416,7 +442,9 @@ var CApp = (function () {
         image(this.staticElements[1], 0, windowHeight - this.staticElements[1].height);
         CSurface.OnDraw(this.staticElements[2], windowWidth - this.staticElements[2].width, 0.15 * windowHeight, 0, this.staticElements[2].height / 3 * Math.floor((this.clock.Get_ticks() * 3) / (120 * 1000)), this.staticElements[2].width, this.staticElements[2].height / 3);
         image(this.staticElements[4], windowWidth * this.staticElementsCoordinates[4][0], this.staticElementsCoordinates[4][1] * windowHeight);
-        image(this.staticElements[9], windowWidth * this.staticElementsCoordinates[9][0], this.staticElementsCoordinates[9][1] * windowHeight);
+        if (this.bossVisible == true) {
+            image(this.staticElements[9], windowWidth * this.staticElementsCoordinates[9][0], this.staticElementsCoordinates[9][1] * windowHeight);
+        }
     };
     return CApp;
 }());
@@ -692,6 +720,23 @@ var CPlayer = (function (_super) {
     return CPlayer;
 }(CEntity));
 ;
+function UpdatePercentage(currentPercentage) {
+    var newPercentage = currentPercentage;
+    if (theApp.inMiniGame == StateOfGame.CATFLIX) {
+        newPercentage += 0.2;
+    }
+    if (theApp.inMiniGame == StateOfGame.TINDER) {
+        newPercentage += 0.08;
+    }
+    return newPercentage;
+}
+function UpdateBossApparition(currentPercentage) {
+    if ((Math.random() * 100) < currentPercentage / 80) {
+        countBoss.Start();
+        return true;
+    }
+    return false;
+}
 var CSurface = (function () {
     function CSurface() {
     }

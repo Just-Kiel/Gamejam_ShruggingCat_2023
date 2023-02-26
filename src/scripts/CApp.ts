@@ -253,6 +253,7 @@ function mouseClicked(){
     }
 }
 
+let countBoss : Timer;
 class CApp {
     //VFX_FW : CVFX; //VFX example
     
@@ -288,6 +289,14 @@ class CApp {
     // int
     points;
 
+
+    // boss gestion
+    progressBarImage;
+    progressBarCoordinates;
+    progressBarPercentage;
+
+    bossVisible; // + progress bar avance + boss vient souvent
+
     constructor(){
         this.inMenu = true;
         this.inGame = false;
@@ -299,9 +308,17 @@ class CApp {
         this.yarnState = 1;
         this.points = 0;
         this.plantState = 1;
-    } 
+
+        this.progressBarImage = "./src/assets/progress.png"
+        this.progressBarCoordinates = [0.79, 0.02]
+        this.progressBarPercentage = 1
+
+        this.bossVisible = false
+    }
     
     OnInit() {
+        // Boss
+        countBoss = new Timer()
 
         // Load des images du jeu
         this.staticElements = [
@@ -317,6 +334,11 @@ class CApp {
             "./src/assets/boss.png",
             "./src/assets/space.png"
         ]
+
+        //Init de la barre
+        this.progressBarImage = loadImage(this.progressBarImage, () => {
+            this.progressBarImage.resize(windowWidth*(this.progressBarImage.width/1920), windowHeight*(this.progressBarImage.height/1080));
+        })
 
         //Initialisation du joueur
         this.Walter = new CPlayer();
@@ -424,6 +446,26 @@ class CApp {
                     countWater.Stop()
                 }
             }
+
+            this.progressBarPercentage = UpdatePercentage(this.progressBarPercentage)
+
+            if (!this.bossVisible) this.bossVisible = UpdateBossApparition(this.progressBarPercentage)
+
+            if (this.bossVisible && countBoss.Get_ticks() > 1000*3) {
+                countBoss.Stop()
+
+                this.bossVisible = false
+            }
+
+            if (this.progressBarPercentage > 100) {
+                this.inDefeat = true
+                this.inGame = false
+            }
+
+            if (this.inMiniGame != StateOfGame.WORKING && this.bossVisible && countBoss.Get_ticks() > 1000*1.5){
+                this.inDefeat = true
+                this.inGame = false
+            }
         }
     
         if (this.inVictory) {
@@ -431,6 +473,8 @@ class CApp {
         }
         if (this.inDefeat) {
             //DEFEAT LOOP
+
+            print("You loose")
         }
     }
 
@@ -446,7 +490,7 @@ class CApp {
                 // temp go to menu
                 this.inMenu = true
             }
-
+            
             this.GameStaticElements()
             this.clock.ShowClock();
             for (let i = 0; i < this.ENTITY; i++) {
@@ -461,6 +505,8 @@ class CApp {
             if (this.inMiniGame == StateOfGame.TINDER) {
                 theApp.Tinder.OnRender();
             }
+
+            CSurface.OnDraw(this.progressBarImage, (windowWidth*0.995) - (this.progressBarPercentage*this.progressBarImage.width)/100, this.progressBarCoordinates[1]*windowHeight, this.progressBarImage.width - (this.progressBarPercentage*this.progressBarImage.width/100), 0, (this.progressBarPercentage*this.progressBarImage.width)/100, this.progressBarImage.height)
         }
         
         if (this.inVictory) {
@@ -496,7 +542,9 @@ class CApp {
         //image(this.staticElements[7], windowWidth*this.staticElementsCoordinates[7][0], this.staticElementsCoordinates[7][1]*windowHeight);
     
         // boss
-        image(this.staticElements[9], windowWidth*this.staticElementsCoordinates[9][0], this.staticElementsCoordinates[9][1]*windowHeight);
+        if (this.bossVisible == true) {
+            image(this.staticElements[9], windowWidth*this.staticElementsCoordinates[9][0], this.staticElementsCoordinates[9][1]*windowHeight);
+        }
     }
 };
 
