@@ -183,7 +183,7 @@ function calculateBBOXES(elements) {
 }
 function mouseClicked() {
     if (theApp.inMenu) {
-        if (theApp.menu.currentMenuState == Page.GAMEOVER) {
+        if (theApp.menu.currentMenuState == Page.GAMEOVER || theApp.menu.currentMenuState == Page.GOODOVER) {
             theApp.inDefeat = false;
             theApp.menu.currentMenuState = DetectButtonToMainMenu(theApp.menu);
         }
@@ -432,6 +432,7 @@ var CApp = (function () {
             if (this.clock.Get_ticks() > 1000 * 40) {
                 this.inGame = false;
                 this.inMenu = true;
+                this.menu.currentMenuState = Page.GOODOVER;
             }
             this.GameStaticElements();
             this.clock.ShowClock();
@@ -454,7 +455,7 @@ var CApp = (function () {
     CApp.prototype.GameStaticElements = function () {
         image(this.staticElements[0], 0, 0);
         image(this.staticElements[1], 0, windowHeight - this.staticElements[1].height);
-        CSurface.OnDraw(this.staticElements[2], windowWidth - this.staticElements[2].width, 0.15 * windowHeight, 0, this.staticElements[2].height / 3 * Math.floor((this.clock.Get_ticks() * 3) / (120 * 1000)), this.staticElements[2].width, this.staticElements[2].height / 3);
+        CSurface.OnDraw(this.staticElements[2], windowWidth - this.staticElements[2].width, 0.15 * windowHeight, 0, this.staticElements[2].height / 3 * Math.floor((this.clock.Get_ticks() * 3) / (40 * 1000)), this.staticElements[2].width, this.staticElements[2].height / 3);
         image(this.staticElements[4], windowWidth * this.staticElementsCoordinates[4][0], this.staticElementsCoordinates[4][1] * windowHeight);
         if (this.bossVisible == true) {
             image(this.staticElements[9], windowWidth * this.staticElementsCoordinates[9][0], this.staticElementsCoordinates[9][1] * windowHeight);
@@ -647,6 +648,7 @@ var Page;
     Page[Page["MENU"] = 0] = "MENU";
     Page[Page["RULES"] = 1] = "RULES";
     Page[Page["GAMEOVER"] = 2] = "GAMEOVER";
+    Page[Page["GOODOVER"] = 3] = "GOODOVER";
 })(Page || (Page = {}));
 ;
 function DetectButtonToMainMenu(menu) {
@@ -655,7 +657,7 @@ function DetectButtonToMainMenu(menu) {
         return Page.MENU;
     }
     else {
-        return Page.GAMEOVER;
+        return menu.currentMenuState;
     }
 }
 var Menu = (function () {
@@ -674,11 +676,13 @@ var Menu = (function () {
         this.backButtonCoordinates = [xBackButton, yBackButton];
         this.finalImages = [
             "./src/assets/gameover.png",
-            "./src/assets/main_menu.png"
+            "./src/assets/main_menu.png",
+            "./src/assets/goodend.png"
         ];
         this.finalCoordinates = [
             [0, 0],
-            [0.7, 0.8]
+            [0.7, 0.8],
+            [0, 0]
         ];
     }
     Menu.prototype.OnLoad = function () {
@@ -713,6 +717,10 @@ var Menu = (function () {
         }
         else if (this.currentMenuState == Page.GAMEOVER) {
             image(this.finalImages[0], this.finalCoordinates[0][0] * windowWidth, this.finalCoordinates[0][1] * windowHeight);
+            image(this.finalImages[1], this.finalCoordinates[1][0] * windowWidth, this.finalCoordinates[1][1] * windowHeight);
+        }
+        else if (this.currentMenuState == Page.GOODOVER) {
+            image(this.finalImages[2], this.finalCoordinates[2][0] * windowWidth, this.finalCoordinates[2][1] * windowHeight);
             image(this.finalImages[1], this.finalCoordinates[1][0] * windowWidth, this.finalCoordinates[1][1] * windowHeight);
         }
     };
@@ -825,7 +833,7 @@ var Timer = (function () {
         strokeWeight(10);
         stroke(73, 72, 70);
         translate(this.clockCoordinates[0] * windowWidth + (this.clockImage.width / 2), this.clockCoordinates[1] * windowHeight + (this.clockImage.height / 2));
-        rotate(PI + (2 * PI * this.Get_ticks() / 120000));
+        rotate(PI + (2 * PI * this.Get_ticks() / 40000));
         line(0, 50, 0, 0);
         pop();
     };

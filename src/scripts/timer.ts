@@ -42,7 +42,7 @@ class Timer {
             strokeWeight(10)
             stroke(73, 72, 70)
             translate(this.clockCoordinates[0]*windowWidth + (this.clockImage.width/2), this.clockCoordinates[1]*windowHeight + (this.clockImage.height/2))
-            rotate(PI+ (2*PI * this.Get_ticks()/ 120000));
+            rotate(PI+ (2*PI * this.Get_ticks()/ 40000));
             line(0, 50, 0, 0);
             pop();
         }

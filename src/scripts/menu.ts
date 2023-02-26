@@ -2,7 +2,8 @@
 enum Page {
     MENU = 0,
     RULES,
-    GAMEOVER
+    GAMEOVER,
+    GOODOVER
 };
 
 function DetectButtonToMainMenu(menu){
@@ -13,7 +14,7 @@ function DetectButtonToMainMenu(menu){
     if(mouseX >= bbox[0][0] && mouseX <= bbox[0][1] && mouseY >= bbox[0][2] && mouseY <= bbox[0][3]){
         return Page.MENU
     } else {
-        return Page.GAMEOVER
+        return menu.currentMenuState
     }
 }
 
@@ -55,12 +56,14 @@ class Menu {
 
         this.finalImages = [
             "./src/assets/gameover.png",
-            "./src/assets/main_menu.png"
+            "./src/assets/main_menu.png",
+            "./src/assets/goodend.png"
         ]
 
         this.finalCoordinates = [
             [0, 0],
-            [0.7, 0.8]
+            [0.7, 0.8],
+            [0, 0]
         ]
     }
     
@@ -95,6 +98,12 @@ class Menu {
         } else if (this.currentMenuState == Page.GAMEOVER){
             // background
             image(this.finalImages[0], this.finalCoordinates[0][0]*windowWidth, this.finalCoordinates[0][1]*windowHeight)
+
+            // button
+            image(this.finalImages[1], this.finalCoordinates[1][0]*windowWidth, this.finalCoordinates[1][1]*windowHeight)
+        } else if (this.currentMenuState == Page.GOODOVER){
+            // background
+            image(this.finalImages[2], this.finalCoordinates[2][0]*windowWidth, this.finalCoordinates[2][1]*windowHeight)
 
             // button
             image(this.finalImages[1], this.finalCoordinates[1][0]*windowWidth, this.finalCoordinates[1][1]*windowHeight)

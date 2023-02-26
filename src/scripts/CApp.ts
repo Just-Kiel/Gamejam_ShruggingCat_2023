@@ -148,7 +148,7 @@ function calculateBBOXES(elements){
 
 function mouseClicked(){
     if(theApp.inMenu){
-        if (theApp.menu.currentMenuState == Page.GAMEOVER){
+        if (theApp.menu.currentMenuState == Page.GAMEOVER || theApp.menu.currentMenuState == Page.GOODOVER){
             theApp.inDefeat = false
             theApp.menu.currentMenuState = DetectButtonToMainMenu(theApp.menu)
         }
@@ -502,8 +502,8 @@ class CApp {
             if (this.clock.Get_ticks() > 1000*40){
                 this.inGame = false;
 
-                // temp go to menu
                 this.inMenu = true
+                this.menu.currentMenuState = Page.GOODOVER
             }
             
             this.GameStaticElements()
@@ -539,7 +539,7 @@ class CApp {
         image(this.staticElements[1], 0, windowHeight-this.staticElements[1].height);
         
         // window
-        CSurface.OnDraw(this.staticElements[2], windowWidth-this.staticElements[2].width, 0.15*windowHeight, 0, this.staticElements[2].height/3 * Math.floor((this.clock.Get_ticks()*3) / (120 *1000)), this.staticElements[2].width, this.staticElements[2].height/3)
+        CSurface.OnDraw(this.staticElements[2], windowWidth-this.staticElements[2].width, 0.15*windowHeight, 0, this.staticElements[2].height/3 * Math.floor((this.clock.Get_ticks()*3) / (40 *1000)), this.staticElements[2].width, this.staticElements[2].height/3)
 
         // computer
         // image(this.staticElements[3], windowWidth*this.staticElementsCoordinates[3][0], this.staticElementsCoordinates[3][1]*windowHeight);
