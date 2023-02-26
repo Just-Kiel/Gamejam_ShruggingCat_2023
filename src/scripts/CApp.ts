@@ -8,8 +8,16 @@ enum StateOfGame {
 };
 
 let countYarn;
+let countWater;
 
 function keyPressed() {
+    if (theApp.inMiniGame == StateOfGame.PLANT && key == "w") {
+        if (countWater == undefined) {
+            countWater = new Timer()
+        }
+        countWater.Start()
+    }
+
     if (theApp.inMiniGame == StateOfGame.YARN) {
         if (countYarn == undefined) {
             countYarn = 0
@@ -39,11 +47,6 @@ function keyPressed() {
         print("Yarn count :" + countYarn)
     }
 
-
-    if (theApp.inMiniGame == StateOfGame.PLANT) {
-        // wait W
-    }
-
     if (keyCode === LEFT_ARROW) {
       //DO SOMETHING
     } else if (keyCode === RIGHT_ARROW) {
@@ -52,14 +55,24 @@ function keyPressed() {
         print("Back to work")
         theApp.inMiniGame = StateOfGame.WORKING
         countYarn = 0;
+        countWater.Stop()
 
         print("Your points are :" + theApp.points)
     }
 }
 
 function keyReleased() {
-    if (theApp.inMiniGame == StateOfGame.PLANT) {
-        // wait W
+    if (theApp.inMiniGame == StateOfGame.PLANT && key == "w") {
+        countWater.Stop()
+        if (countWater.Get_ticks() > 1000 * 3) {
+            print("Plant now ready")
+            theApp.plantState = 1
+        } else {
+            print("Too fast")
+        }
+        
+        print("Go back to work before boss sees you !")
+        theApp.inMiniGame = StateOfGame.WORKING
     }
     if (keyCode === LEFT_ARROW) {
         //DO SOMETHING
@@ -114,7 +127,7 @@ function mouseClicked(){
         }
     } else if (theApp.inGame) {
         //Calculate bboxes for interactable objects
-        let elements = [theApp.staticElements[3], theApp.staticElementsCoordinates[3], theApp.staticElements[4], theApp.staticElementsCoordinates[4], theApp.staticElements[5], theApp.staticElementsCoordinates[5], theApp.staticElements[6], theApp.staticElementsCoordinates[6]]
+        let elements = [theApp.Computer, theApp.staticElementsCoordinates[3], theApp.staticElements[4], theApp.staticElementsCoordinates[4], theApp.Plant, theApp.staticElementsCoordinates[5], theApp.staticElements[6], theApp.staticElementsCoordinates[6]]
         theApp.bboxesInteractablesElements = calculateBBOXES(elements)
 
         if (theApp.inMiniGame == StateOfGame.WORKING) {
@@ -280,6 +293,7 @@ class CApp {
         this.Computer.width *= windowWidth/1920.0;
         this.Computer.height *= windowHeight/1080.0;
         CEntity.EntityList[0] = this.Computer;
+        
         this.Plant.X = windowWidth*this.staticElementsCoordinates[5][0];
         this.Plant.Y = windowHeight*this.staticElementsCoordinates[5][1];
         this.Plant.Owidth = 171;
@@ -306,6 +320,17 @@ class CApp {
             for (let i = 0; i < this.ENTITY; i++) {                
                 CEntity.EntityList[i].OnLoop();
                 CEntity.EntityList[i].Surf_Entity.resize(windowWidth*(CEntity.EntityList[i].Owidth/1920.0), windowHeight*(CEntity.EntityList[i].Oheight/1080.0));
+            }
+
+            if (this.inMiniGame == StateOfGame.PLANT && keyIsDown(87)) {
+                if (countWater.Get_ticks() > 1000 * 3) {
+                    print("Plant now ready")
+                    theApp.plantState = 1
+        
+                    print("Back to work")
+                    theApp.inMiniGame = StateOfGame.WORKING
+                    countWater.Stop()
+                }
             }
         }
     
@@ -383,4 +408,4 @@ class CApp {
 //           while playing : watchout boss arrive because of sound : spam clic pour gagner des points --> DONE
 
 // Plant   : if watered : relax progress bar --> DONE
-//           if not : hold w : cut auto when released (2 et 3s)
+//           if not : hold w : cut auto when released (2 et 3s) --> DONE

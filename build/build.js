@@ -60,7 +60,14 @@ var StateOfGame;
 })(StateOfGame || (StateOfGame = {}));
 ;
 var countYarn;
+var countWater;
 function keyPressed() {
+    if (theApp.inMiniGame == StateOfGame.PLANT && key == "w") {
+        if (countWater == undefined) {
+            countWater = new Timer();
+        }
+        countWater.Start();
+    }
     if (theApp.inMiniGame == StateOfGame.YARN) {
         if (countYarn == undefined) {
             countYarn = 0;
@@ -82,8 +89,6 @@ function keyPressed() {
         }
         print("Yarn count :" + countYarn);
     }
-    if (theApp.inMiniGame == StateOfGame.PLANT) {
-    }
     if (keyCode === LEFT_ARROW) {
     }
     else if (keyCode === RIGHT_ARROW) {
@@ -92,11 +97,22 @@ function keyPressed() {
         print("Back to work");
         theApp.inMiniGame = StateOfGame.WORKING;
         countYarn = 0;
+        countWater.Stop();
         print("Your points are :" + theApp.points);
     }
 }
 function keyReleased() {
-    if (theApp.inMiniGame == StateOfGame.PLANT) {
+    if (theApp.inMiniGame == StateOfGame.PLANT && key == "w") {
+        countWater.Stop();
+        if (countWater.Get_ticks() > 1000 * 3) {
+            print("Plant now ready");
+            theApp.plantState = 1;
+        }
+        else {
+            print("Too fast");
+        }
+        print("Go back to work before boss sees you !");
+        theApp.inMiniGame = StateOfGame.WORKING;
     }
     if (keyCode === LEFT_ARROW) {
     }
@@ -143,7 +159,7 @@ function mouseClicked() {
         }
     }
     else if (theApp.inGame) {
-        var elements = [theApp.staticElements[3], theApp.staticElementsCoordinates[3], theApp.staticElements[4], theApp.staticElementsCoordinates[4], theApp.staticElements[5], theApp.staticElementsCoordinates[5], theApp.staticElements[6], theApp.staticElementsCoordinates[6]];
+        var elements = [theApp.Computer, theApp.staticElementsCoordinates[3], theApp.staticElements[4], theApp.staticElementsCoordinates[4], theApp.Plant, theApp.staticElementsCoordinates[5], theApp.staticElements[6], theApp.staticElementsCoordinates[6]];
         theApp.bboxesInteractablesElements = calculateBBOXES(elements);
         if (theApp.inMiniGame == StateOfGame.WORKING) {
             if (mouseX >= theApp.bboxesInteractablesElements[0][0] && mouseX <= theApp.bboxesInteractablesElements[0][1] && mouseY >= theApp.bboxesInteractablesElements[0][2] && mouseY <= theApp.bboxesInteractablesElements[0][3]) {
@@ -271,6 +287,15 @@ var CApp = (function () {
             for (var i = 0; i < this.ENTITY; i++) {
                 CEntity.EntityList[i].OnLoop();
                 CEntity.EntityList[i].Surf_Entity.resize(windowWidth * (CEntity.EntityList[i].Owidth / 1920.0), windowHeight * (CEntity.EntityList[i].Oheight / 1080.0));
+            }
+            if (this.inMiniGame == StateOfGame.PLANT && keyIsDown(87)) {
+                if (countWater.Get_ticks() > 1000 * 3) {
+                    print("Plant now ready");
+                    theApp.plantState = 1;
+                    print("Back to work");
+                    theApp.inMiniGame = StateOfGame.WORKING;
+                    countWater.Stop();
+                }
             }
         }
         if (this.inVictory) {
