@@ -12,6 +12,7 @@ function DetectButtonToMainMenu(menu){
     let bbox = calculateBBOXES([menu.finalImages[1], menu.finalCoordinates[1]])
 
     if(mouseX >= bbox[0][0] && mouseX <= bbox[0][1] && mouseY >= bbox[0][2] && mouseY <= bbox[0][3]){
+        theApp.restart();
         return Page.MENU
     } else {
         return menu.currentMenuState

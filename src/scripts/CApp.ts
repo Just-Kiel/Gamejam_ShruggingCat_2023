@@ -219,7 +219,7 @@ function mouseClicked(){
 
             tempoBoss = 0;
             theApp.bossVisible = false
-            countBoss.Stop()
+            countBoss.Start()
 
             print("Go back before boss sees you")
             theApp.inMiniGame = StateOfGame.WORKING
@@ -435,6 +435,48 @@ class CApp {
         this.Tinder.height *= windowHeight/1080.0;
         this.Tinder.currentFrameRow = 1;
         this.ENTITY = 4;
+    }
+
+    restart() {
+        // Boss
+        tempoBoss = 0;
+        countBoss.Start();
+
+        this.Computer.currentFrameCol = 0;
+        this.Computer.currentFrameRow = 0;
+        this.Computer.anim_Control.maxFrames = 1;
+
+        this.Plant.currentFrameCol = 0;
+        this.Plant.currentFrameRow = 2;
+        this.Plant.anim_Control.maxFrames = 1;
+
+        this.Yarn.currentFrameCol = 0;
+        this.Yarn.currentFrameRow = 0;
+        this.Yarn.anim_Control.maxFrames = 1;
+
+        this.Walter.currentFrameCol = 0;
+        this.Walter.currentFrameRow = 0;
+        this.Walter.anim_Control.maxFrames = 2;
+
+        this.Tinder.currentFrameCol = 0;
+        this.Tinder.currentFrameRow = 1;
+        this.Tinder.anim_Control.maxFrames = 1;
+
+        this.inMenu = true;
+        this.inGame = false;
+        this.inVictory = false;
+        this.inDefeat = false;
+        this.inMiniGame = StateOfGame.WORKING;
+
+        this.yarnState = 1;
+        this.points = 0;
+        this.plantState = 1;
+        this.progressBarPercentage = 1
+
+        this.bossVisible = false
+
+        countYarn = 0;
+        countWater = 0;
     }
 
     OnLoop() {
