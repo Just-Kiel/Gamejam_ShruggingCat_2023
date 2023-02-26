@@ -1,8 +1,20 @@
+//Permet de differencier les moments du jeu
+enum StateOfGame {
+    WORKING = 0,
+    TINDER,
+    PLANT,
+    CATFLIX,
+    YARN
+};
+
 function keyPressed() {
     if (keyCode === LEFT_ARROW) {
       //DO SOMETHING
     } else if (keyCode === RIGHT_ARROW) {
       //DO SOMETHING
+    } else if (theApp.inMiniGame != StateOfGame.WORKING && key == ' ') {
+        print("Back to work")
+        theApp.inMiniGame = StateOfGame.WORKING
     }
 }
 
@@ -55,6 +67,36 @@ function mouseClicked(){
             }
         }
     } else if (theApp.inGame) {
+        //Calculate bboxes for interactable objects
+        let elements = [theApp.staticElements[3], theApp.staticElementsCoordinates[3], theApp.staticElements[4], theApp.staticElementsCoordinates[4], theApp.staticElements[5], theApp.staticElementsCoordinates[5], theApp.staticElements[6], theApp.staticElementsCoordinates[6]]
+        theApp.bboxesInteractablesElements = calculateBBOXES(elements)
+
+        if (theApp.inMiniGame == StateOfGame.WORKING) {
+            //computer
+            if(mouseX >= theApp.bboxesInteractablesElements[0][0] && mouseX <= theApp.bboxesInteractablesElements[0][1] && mouseY >= theApp.bboxesInteractablesElements[0][2] && mouseY <= theApp.bboxesInteractablesElements[0][3]){
+                print("Launch CatFlix")
+                theApp.inMiniGame = StateOfGame.CATFLIX
+            }
+
+            // phone
+            if(mouseX >= theApp.bboxesInteractablesElements[1][0] && mouseX <= theApp.bboxesInteractablesElements[1][1] && mouseY >= theApp.bboxesInteractablesElements[1][2] && mouseY <= theApp.bboxesInteractablesElements[1][3]){
+                print("Launch Tinder")
+                theApp.inMiniGame = StateOfGame.TINDER
+            }
+            
+            // plant
+            if(mouseX >= theApp.bboxesInteractablesElements[2][0] && mouseX <= theApp.bboxesInteractablesElements[2][1] && mouseY >= theApp.bboxesInteractablesElements[2][2] && mouseY <= theApp.bboxesInteractablesElements[2][3]){
+                print("Launch Plant Action")
+                theApp.inMiniGame = StateOfGame.PLANT
+            }
+            
+            // yarn
+            if(mouseX >= theApp.bboxesInteractablesElements[3][0] && mouseX <= theApp.bboxesInteractablesElements[3][1] && mouseY >= theApp.bboxesInteractablesElements[3][2] && mouseY <= theApp.bboxesInteractablesElements[3][3]){
+                print("Launch Yarn Action")
+                theApp.inMiniGame = StateOfGame.YARN
+            }
+        }
+
         if (mouseButton === LEFT) {
             //X = MouseX Y = MouseY
         }
@@ -87,6 +129,7 @@ class CApp {
     staticElementsCoordinates
 
     bboxesInteractablesElements;
+    inMiniGame;
 
     constructor(){
         this.inMenu = true;
@@ -94,6 +137,7 @@ class CApp {
         this.inVictory = false;
         this.inDefeat = false;
         this.staticElements = [];
+        this.inMiniGame = StateOfGame.WORKING;
     } 
     
     OnInit() {
@@ -138,10 +182,6 @@ class CApp {
                 this.staticElements[index].resize(windowWidth*this.staticElements[index].width/1920, windowHeight*this.staticElements[index].height/1080);
             })
         }
-
-        //Calculate bboxes for interactable objects
-        let elements = [this.staticElements[3], this.staticElementsCoordinates[3], this.staticElements[4], this.staticElementsCoordinates[4], this.staticElements[5], this.staticElementsCoordinates[5]]
-        this.bboxesInteractablesElements = calculateBBOXES(elements)
     }
 
     OnLoop() {
@@ -211,8 +251,9 @@ class CApp {
 
         // yarn
         image(this.staticElements[6], windowWidth*this.staticElementsCoordinates[6][0], this.staticElementsCoordinates[6][1]*windowHeight);
-    }   
-
-    // TODO resize
+    }
 };
+
+// prevent from click on other
+// only space available during game
     

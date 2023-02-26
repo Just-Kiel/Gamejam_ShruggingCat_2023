@@ -50,10 +50,23 @@ var p6_SaveImageSequence = function (durationInFrames, fileExtension) {
         }, mimeType);
     }
 };
+var StateOfGame;
+(function (StateOfGame) {
+    StateOfGame[StateOfGame["WORKING"] = 0] = "WORKING";
+    StateOfGame[StateOfGame["TINDER"] = 1] = "TINDER";
+    StateOfGame[StateOfGame["PLANT"] = 2] = "PLANT";
+    StateOfGame[StateOfGame["CATFLIX"] = 3] = "CATFLIX";
+    StateOfGame[StateOfGame["YARN"] = 4] = "YARN";
+})(StateOfGame || (StateOfGame = {}));
+;
 function keyPressed() {
     if (keyCode === LEFT_ARROW) {
     }
     else if (keyCode === RIGHT_ARROW) {
+    }
+    else if (theApp.inMiniGame != StateOfGame.WORKING && key == ' ') {
+        print("Back to work");
+        theApp.inMiniGame = StateOfGame.WORKING;
     }
 }
 function keyReleased() {
@@ -97,6 +110,26 @@ function mouseClicked() {
         }
     }
     else if (theApp.inGame) {
+        var elements = [theApp.staticElements[3], theApp.staticElementsCoordinates[3], theApp.staticElements[4], theApp.staticElementsCoordinates[4], theApp.staticElements[5], theApp.staticElementsCoordinates[5], theApp.staticElements[6], theApp.staticElementsCoordinates[6]];
+        theApp.bboxesInteractablesElements = calculateBBOXES(elements);
+        if (theApp.inMiniGame == StateOfGame.WORKING) {
+            if (mouseX >= theApp.bboxesInteractablesElements[0][0] && mouseX <= theApp.bboxesInteractablesElements[0][1] && mouseY >= theApp.bboxesInteractablesElements[0][2] && mouseY <= theApp.bboxesInteractablesElements[0][3]) {
+                print("Launch CatFlix");
+                theApp.inMiniGame = StateOfGame.CATFLIX;
+            }
+            if (mouseX >= theApp.bboxesInteractablesElements[1][0] && mouseX <= theApp.bboxesInteractablesElements[1][1] && mouseY >= theApp.bboxesInteractablesElements[1][2] && mouseY <= theApp.bboxesInteractablesElements[1][3]) {
+                print("Launch Tinder");
+                theApp.inMiniGame = StateOfGame.TINDER;
+            }
+            if (mouseX >= theApp.bboxesInteractablesElements[2][0] && mouseX <= theApp.bboxesInteractablesElements[2][1] && mouseY >= theApp.bboxesInteractablesElements[2][2] && mouseY <= theApp.bboxesInteractablesElements[2][3]) {
+                print("Launch Plant Action");
+                theApp.inMiniGame = StateOfGame.PLANT;
+            }
+            if (mouseX >= theApp.bboxesInteractablesElements[3][0] && mouseX <= theApp.bboxesInteractablesElements[3][1] && mouseY >= theApp.bboxesInteractablesElements[3][2] && mouseY <= theApp.bboxesInteractablesElements[3][3]) {
+                print("Launch Yarn Action");
+                theApp.inMiniGame = StateOfGame.YARN;
+            }
+        }
         if (mouseButton === LEFT) {
         }
         if (mouseButton === RIGHT) {
@@ -112,6 +145,7 @@ var CApp = (function () {
         this.inVictory = false;
         this.inDefeat = false;
         this.staticElements = [];
+        this.inMiniGame = StateOfGame.WORKING;
     }
     CApp.prototype.OnInit = function () {
         var _this = this;
@@ -150,8 +184,6 @@ var CApp = (function () {
         for (var index = 0; index < this.staticElements.length; index++) {
             _loop_1(index);
         }
-        var elements = [this.staticElements[3], this.staticElementsCoordinates[3], this.staticElements[4], this.staticElementsCoordinates[4], this.staticElements[5], this.staticElementsCoordinates[5]];
-        this.bboxesInteractablesElements = calculateBBOXES(elements);
     };
     CApp.prototype.OnLoop = function () {
         CFPS.FPSControl.OnLoop();
