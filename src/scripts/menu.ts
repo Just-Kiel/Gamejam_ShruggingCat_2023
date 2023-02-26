@@ -30,7 +30,7 @@ class Menu {
         this.playButtonImage = "./src/assets/play_button.png"
         this.rulesButtonImage = "./src/assets/rules_button.png"
         this.rulesBackgroundImage = "./src/assets/rules.png"
-        this.backButtonImage = "./src/assets/cursor.png"
+        this.backButtonImage = "./src/assets/back_button.png"
 
         this.playButtonCoordinates = [xPlayButton, yPlayButton]
         this.rulesButtonCoordinates = [xRulesButton, yRulesButton]
