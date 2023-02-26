@@ -212,6 +212,9 @@ function mouseClicked(){
             theApp.Yarn.currentFrameRow = 9;
             theApp.yarnState = 0
 
+            theApp.bossVisible = false
+            countBoss.Stop()
+
             print("Go back before boss sees you")
             theApp.inMiniGame = StateOfGame.WORKING
         
@@ -484,7 +487,7 @@ class CApp {
         }
         
         if (this.inGame) {
-            if (this.clock.Get_ticks() > 1000*120){
+            if (this.clock.Get_ticks() > 1000*40){
                 this.inGame = false;
 
                 // temp go to menu
@@ -562,5 +565,10 @@ class CApp {
 
 
 // position du boss --> DONE
-// progress bar : rectangle (x et y à définir et couleurs à définir)
+// progress bar : rectangle (x et y à définir et couleurs à définir) --> DONE
 // position barre espace --> DONE
+
+
+// yarn : counter stop --> DONE
+// plant: baisse progress bar
+// game over

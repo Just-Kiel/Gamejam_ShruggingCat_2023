@@ -231,6 +231,8 @@ function mouseClicked() {
             print("Throw Yarn ! Distract the boss");
             theApp.Yarn.currentFrameRow = 9;
             theApp.yarnState = 0;
+            theApp.bossVisible = false;
+            countBoss.Stop();
             print("Go back before boss sees you");
             theApp.inMiniGame = StateOfGame.WORKING;
         }
@@ -415,7 +417,7 @@ var CApp = (function () {
             this.menu.OnDraw(0, 0);
         }
         if (this.inGame) {
-            if (this.clock.Get_ticks() > 1000 * 120) {
+            if (this.clock.Get_ticks() > 1000 * 40) {
                 this.inGame = false;
                 this.inMenu = true;
             }
@@ -731,7 +733,7 @@ function UpdatePercentage(currentPercentage) {
     return newPercentage;
 }
 function UpdateBossApparition(currentPercentage) {
-    if ((Math.random() * 100) < currentPercentage / 80) {
+    if (random(0, 100) < currentPercentage * 2 / 100) {
         countBoss.Start();
         return true;
     }

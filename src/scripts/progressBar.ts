@@ -12,7 +12,7 @@ function UpdatePercentage(currentPercentage){
 }
 
 function UpdateBossApparition(currentPercentage) {
-    if ((Math.random()*100)<currentPercentage/80){
+    if (random(0, 100) < currentPercentage*2/100){
         countBoss.Start()
         return true
     }
