@@ -50,7 +50,37 @@ var p6_SaveImageSequence = function (durationInFrames, fileExtension) {
         }, mimeType);
     }
 };
+var StateOfGame;
+(function (StateOfGame) {
+    StateOfGame[StateOfGame["WORKING"] = 0] = "WORKING";
+    StateOfGame[StateOfGame["TINDER"] = 1] = "TINDER";
+    StateOfGame[StateOfGame["PLANT"] = 2] = "PLANT";
+    StateOfGame[StateOfGame["CATFLIX"] = 3] = "CATFLIX";
+    StateOfGame[StateOfGame["YARN"] = 4] = "YARN";
+})(StateOfGame || (StateOfGame = {}));
+;
+var countYarn;
 function keyPressed() {
+    if (theApp.inMiniGame == StateOfGame.YARN) {
+        if (countYarn == undefined) {
+            countYarn = 0;
+        }
+        if ((countYarn == 0 || countYarn == 4) && keyCode === LEFT_ARROW)
+            countYarn++;
+        if ((countYarn == 1 || countYarn == 5) && keyCode === DOWN_ARROW)
+            countYarn++;
+        if ((countYarn == 2 || countYarn == 6) && keyCode === RIGHT_ARROW)
+            countYarn++;
+        if ((countYarn == 3 || countYarn == 7) && keyCode === UP_ARROW)
+            countYarn++;
+        if (countYarn == 8) {
+            print("Yarn now ready !");
+            theApp.yarnState = 1;
+            print("Go back to work before boss sees you !");
+            theApp.inMiniGame = StateOfGame.WORKING;
+        }
+        print("Yarn count :" + countYarn);
+    }
     if (keyCode === LEFT_ARROW) {
     }
     else if (keyCode === RIGHT_ARROW) {
@@ -60,6 +90,11 @@ function keyReleased() {
     if (keyCode === LEFT_ARROW) {
     }
     else if (keyCode === RIGHT_ARROW) {
+    }
+    else if (theApp.inMiniGame != StateOfGame.WORKING && key == ' ') {
+        print("Back to work");
+        theApp.inMiniGame = StateOfGame.WORKING;
+        countYarn = 0;
     }
 }
 function calculateBBOXES(elements) {
@@ -82,6 +117,9 @@ function mouseClicked() {
             if (mouseX >= bboxes[0][0] && mouseX <= bboxes[0][1] && mouseY >= bboxes[0][2] && mouseY <= bboxes[0][3]) {
                 theApp.inGame = true;
                 theApp.inMenu = false;
+                theApp.clock = new Timer();
+                theApp.clock.Start();
+                theApp.clock.OnLoad();
             }
             if (mouseX >= bboxes[1][0] && mouseX <= bboxes[1][1] && mouseY >= bboxes[1][2] && mouseY <= bboxes[1][3]) {
                 theApp.menu.currentMenuState = Page.RULES;
@@ -94,6 +132,34 @@ function mouseClicked() {
         }
     }
     else if (theApp.inGame) {
+        var elements = [theApp.staticElements[3], theApp.staticElementsCoordinates[3], theApp.staticElements[4], theApp.staticElementsCoordinates[4], theApp.staticElements[5], theApp.staticElementsCoordinates[5], theApp.staticElements[6], theApp.staticElementsCoordinates[6]];
+        theApp.bboxesInteractablesElements = calculateBBOXES(elements);
+        if (theApp.inMiniGame == StateOfGame.WORKING) {
+            if (mouseX >= theApp.bboxesInteractablesElements[0][0] && mouseX <= theApp.bboxesInteractablesElements[0][1] && mouseY >= theApp.bboxesInteractablesElements[0][2] && mouseY <= theApp.bboxesInteractablesElements[0][3]) {
+                print("Launch CatFlix");
+                theApp.inMiniGame = StateOfGame.CATFLIX;
+            }
+            if (mouseX >= theApp.bboxesInteractablesElements[1][0] && mouseX <= theApp.bboxesInteractablesElements[1][1] && mouseY >= theApp.bboxesInteractablesElements[1][2] && mouseY <= theApp.bboxesInteractablesElements[1][3]) {
+                print("Launch Tinder");
+                theApp.inMiniGame = StateOfGame.TINDER;
+            }
+            if (mouseX >= theApp.bboxesInteractablesElements[2][0] && mouseX <= theApp.bboxesInteractablesElements[2][1] && mouseY >= theApp.bboxesInteractablesElements[2][2] && mouseY <= theApp.bboxesInteractablesElements[2][3]) {
+                print("Launch Plant Action");
+                theApp.inMiniGame = StateOfGame.PLANT;
+            }
+            if (mouseX >= theApp.bboxesInteractablesElements[3][0] && mouseX <= theApp.bboxesInteractablesElements[3][1] && mouseY >= theApp.bboxesInteractablesElements[3][2] && mouseY <= theApp.bboxesInteractablesElements[3][3]) {
+                print("Launch Yarn Action");
+                theApp.inMiniGame = StateOfGame.YARN;
+            }
+        }
+        if (theApp.inMiniGame == StateOfGame.YARN) {
+            if (theApp.yarnState == 1) {
+                print("Throw Yarn ! Distract the boss");
+                theApp.yarnState = 0;
+                print("Go back before boss sees you");
+                theApp.inMiniGame = StateOfGame.WORKING;
+            }
+        }
         if (mouseButton === LEFT) {
         }
         if (mouseButton === RIGHT) {
@@ -109,6 +175,8 @@ var CApp = (function () {
         this.inVictory = false;
         this.inDefeat = false;
         this.staticElements = [];
+        this.inMiniGame = StateOfGame.WORKING;
+        this.yarnState = 1;
     }
     CApp.prototype.OnInit = function () {
         var _this = this;
@@ -118,7 +186,8 @@ var CApp = (function () {
             "./src/assets/window_day.png",
             "./src/assets/computer.png",
             "./src/assets/phone.png",
-            "./src/assets/plant.png"
+            "./src/assets/plant.png",
+            "./src/assets/yarn_completed.png"
         ];
         this.Walter = new CPlayer();
         this.Walter.OnLoad("./src/assets/PKM_1.png", 32, 32, 0);
@@ -134,7 +203,8 @@ var CApp = (function () {
             [0, 0.15],
             [0.1, 0.18],
             [0.6, 0.78],
-            [0.56, 0.43]
+            [0.56, 0.43],
+            [0., 0.52]
         ];
         var _loop_1 = function (index) {
             var element = this_1.staticElements[index];
@@ -190,7 +260,12 @@ var CApp = (function () {
             this.menu.OnDraw(0, 0);
         }
         if (this.inGame) {
+            if (this.clock.Get_ticks() > 1000 * 120) {
+                this.inGame = false;
+                this.inMenu = true;
+            }
             this.GameStaticElements();
+            this.clock.ShowClock();
             for (var i = 0; i < this.ENTITY; i++) {
                 CEntity.EntityList[i].OnRender();
             }
@@ -203,8 +278,9 @@ var CApp = (function () {
     CApp.prototype.GameStaticElements = function () {
         image(this.staticElements[0], 0, 0);
         image(this.staticElements[1], 0, windowHeight - this.staticElements[1].height);
-        image(this.staticElements[2], windowWidth - this.staticElements[2].width, 0.15 * windowHeight);
+        CSurface.OnDraw(this.staticElements[2], windowWidth - this.staticElements[2].width, 0.15 * windowHeight, 0, this.staticElements[2].height / 3 * Math.floor((this.clock.Get_ticks() * 3) / (120 * 1000)), this.staticElements[2].width, this.staticElements[2].height / 3);
         image(this.staticElements[4], windowWidth * this.staticElementsCoordinates[4][0], this.staticElementsCoordinates[4][1] * windowHeight);
+        image(this.staticElements[6], windowWidth * this.staticElementsCoordinates[6][0], this.staticElementsCoordinates[6][1] * windowHeight);
     };
     return CApp;
 }());
