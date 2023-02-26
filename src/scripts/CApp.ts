@@ -7,7 +7,37 @@ enum StateOfGame {
     YARN
 };
 
+let countYarn;
+
 function keyPressed() {
+    if (theApp.inMiniGame == StateOfGame.YARN) {
+        if (countYarn == undefined) {
+            countYarn = 0
+        }
+
+        // left : 0, 4
+        if ((countYarn == 0 || countYarn == 4) && keyCode === LEFT_ARROW) countYarn++;
+
+        // down : 1, 5
+        if ((countYarn == 1 || countYarn == 5) && keyCode === DOWN_ARROW) countYarn++;
+
+        // right: 2, 6
+        if ((countYarn == 2 || countYarn == 6) && keyCode === RIGHT_ARROW) countYarn++;
+    
+        // up   : 3, 7
+        if ((countYarn == 3 || countYarn == 7) && keyCode === UP_ARROW) countYarn++;
+
+        if (countYarn == 8) {
+            print("Yarn now ready !")
+            theApp.yarnState = 1
+
+            print("Go back to work before boss sees you !")
+            theApp.inMiniGame = StateOfGame.WORKING
+        }
+
+        print("Yarn count :" + countYarn)
+    }
+
     if (keyCode === LEFT_ARROW) {
       //DO SOMETHING
     } else if (keyCode === RIGHT_ARROW) {
@@ -15,6 +45,7 @@ function keyPressed() {
     } else if (theApp.inMiniGame != StateOfGame.WORKING && key == ' ') {
         print("Back to work")
         theApp.inMiniGame = StateOfGame.WORKING
+        countYarn = 0;
     }
 }
 
@@ -96,6 +127,16 @@ function mouseClicked(){
                 theApp.inMiniGame = StateOfGame.YARN
             }
         }
+        
+        if (theApp.inMiniGame == StateOfGame.YARN) {
+            if (theApp.yarnState == 1) {
+                print("Throw Yarn ! Distract the boss")
+                theApp.yarnState = 0
+
+                print("Go back before boss sees you")
+                theApp.inMiniGame = StateOfGame.WORKING
+            }
+        }
 
         if (mouseButton === LEFT) {
             //X = MouseX Y = MouseY
@@ -131,6 +172,8 @@ class CApp {
     bboxesInteractablesElements;
     inMiniGame;
 
+    yarnState; // full :1 and empty :0
+
     constructor(){
         this.inMenu = true;
         this.inGame = false;
@@ -138,6 +181,8 @@ class CApp {
         this.inDefeat = false;
         this.staticElements = [];
         this.inMiniGame = StateOfGame.WORKING;
+
+        this.yarnState = 1;
     } 
     
     OnInit() {
@@ -254,6 +299,6 @@ class CApp {
     }
 };
 
-// prevent from click on other
-// only space available during game
-    
+// faire les interactions de chaque mini jeu (starting by la pelote)
+// Pelote : if pelote plein (clic gauche pour distraire) and then vide and back to work --> DONE
+//          if vide (8 fleches : suivre la sprite if wrong no problem) and then pleine and back to work --> DONE

@@ -59,7 +59,28 @@ var StateOfGame;
     StateOfGame[StateOfGame["YARN"] = 4] = "YARN";
 })(StateOfGame || (StateOfGame = {}));
 ;
+var countYarn;
 function keyPressed() {
+    if (theApp.inMiniGame == StateOfGame.YARN) {
+        if (countYarn == undefined) {
+            countYarn = 0;
+        }
+        if ((countYarn == 0 || countYarn == 4) && keyCode === LEFT_ARROW)
+            countYarn++;
+        if ((countYarn == 1 || countYarn == 5) && keyCode === DOWN_ARROW)
+            countYarn++;
+        if ((countYarn == 2 || countYarn == 6) && keyCode === RIGHT_ARROW)
+            countYarn++;
+        if ((countYarn == 3 || countYarn == 7) && keyCode === UP_ARROW)
+            countYarn++;
+        if (countYarn == 8) {
+            print("Yarn now ready !");
+            theApp.yarnState = 1;
+            print("Go back to work before boss sees you !");
+            theApp.inMiniGame = StateOfGame.WORKING;
+        }
+        print("Yarn count :" + countYarn);
+    }
     if (keyCode === LEFT_ARROW) {
     }
     else if (keyCode === RIGHT_ARROW) {
@@ -67,6 +88,7 @@ function keyPressed() {
     else if (theApp.inMiniGame != StateOfGame.WORKING && key == ' ') {
         print("Back to work");
         theApp.inMiniGame = StateOfGame.WORKING;
+        countYarn = 0;
     }
 }
 function keyReleased() {
@@ -130,6 +152,14 @@ function mouseClicked() {
                 theApp.inMiniGame = StateOfGame.YARN;
             }
         }
+        if (theApp.inMiniGame == StateOfGame.YARN) {
+            if (theApp.yarnState == 1) {
+                print("Throw Yarn ! Distract the boss");
+                theApp.yarnState = 0;
+                print("Go back before boss sees you");
+                theApp.inMiniGame = StateOfGame.WORKING;
+            }
+        }
         if (mouseButton === LEFT) {
         }
         if (mouseButton === RIGHT) {
@@ -146,6 +176,7 @@ var CApp = (function () {
         this.inDefeat = false;
         this.staticElements = [];
         this.inMiniGame = StateOfGame.WORKING;
+        this.yarnState = 1;
     }
     CApp.prototype.OnInit = function () {
         var _this = this;
