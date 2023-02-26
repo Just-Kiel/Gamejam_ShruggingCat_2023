@@ -22,6 +22,10 @@ class CEntity {
     width;
     //int 
     height;
+    //int 
+    Owidth;
+    //int 
+    Oheight;
     
     //int 
     type;

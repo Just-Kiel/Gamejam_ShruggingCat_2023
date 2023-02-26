@@ -1,3 +1,4 @@
 node_modules/*/*
 !node_modules/@types/p5
 !node_modules/@types/dat.gui
+src/assets/.DS_Store
