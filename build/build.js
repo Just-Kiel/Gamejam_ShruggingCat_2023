@@ -88,6 +88,7 @@ function keyPressed() {
             countWater = new Timer();
         }
         countWater.Start();
+        theApp.Plant.currentFrameRow = 1;
     }
     if (theApp.inMiniGame == StateOfGame.YARN) {
         if (countYarn == undefined) {
@@ -127,8 +128,11 @@ function keyPressed() {
             countYarn = 0;
             theApp.Yarn.currentFrameRow = 9;
         }
-        if (theApp.inMiniGame == StateOfGame.PLANT) {
-            countWater.Stop();
+        theApp.Computer.currentFrameCol = 0;
+        theApp.Computer.currentFrameRow = 0;
+        if (theApp.plantState != 1) {
+            theApp.Plant.currentFrameRow = 0;
+            theApp.inMiniGame == StateOfGame.PLANT;
         }
         print("Your points are :" + theApp.points);
     }
@@ -139,8 +143,10 @@ function keyReleased() {
         if (countWater.Get_ticks() > 1000 * 3) {
             print("Plant now ready");
             theApp.plantState = 1;
+            theApp.Plant.currentFrameRow = 2;
         }
         else {
+            theApp.Plant.currentFrameRow = 0;
             print("Too fast");
         }
         print("Go back to work before boss sees you !");
@@ -205,6 +211,7 @@ function mouseClicked() {
             if (mouseX >= theApp.bboxesInteractablesElements[2][0] && mouseX <= theApp.bboxesInteractablesElements[2][1] && mouseY >= theApp.bboxesInteractablesElements[2][2] && mouseY <= theApp.bboxesInteractablesElements[2][3]) {
                 print("Launch Plant Action");
                 theApp.inMiniGame = StateOfGame.PLANT;
+                theApp.Plant.currentFrameRow = 1;
             }
             if (mouseX >= theApp.bboxesInteractablesElements[3][0] && mouseX <= theApp.bboxesInteractablesElements[3][1] && mouseY >= theApp.bboxesInteractablesElements[3][2] && mouseY <= theApp.bboxesInteractablesElements[3][3]) {
                 print("Launch Yarn Action");
@@ -224,6 +231,7 @@ function mouseClicked() {
         if (theApp.inMiniGame == StateOfGame.PLANT) {
             if (theApp.plantState == 1) {
                 print("You relax now !");
+                theApp.Plant.currentFrameRow = 0;
                 theApp.plantState = 0;
                 print("Go back before boss sees you");
                 theApp.inMiniGame = StateOfGame.WORKING;
@@ -231,6 +239,8 @@ function mouseClicked() {
         }
         if (theApp.inMiniGame == StateOfGame.CATFLIX && mouseButton === LEFT) {
             print("You see a movie, it's loud !");
+            theApp.Computer.currentFrameCol = 1;
+            theApp.Computer.currentFrameRow = (theApp.Computer.currentFrameRow + 1) % 2;
             theApp.points += 30;
         }
         if (mouseButton === LEFT) {
@@ -262,9 +272,9 @@ var CApp = (function () {
             "./src/assets/computer.png",
             "./src/assets/phone.png",
             "./src/assets/plant.png",
+            "./src/assets/tinder.png",
             "./src/assets/yarn.png",
-            "./src/assets/hands.png",
-            "./src/assets/tinder.png"
+            "./src/assets/hands.png"
         ];
         this.Walter = new CPlayer();
         this.Walter.OnLoad("./src/assets/PKM_1.png", 32, 32, 0);
@@ -339,6 +349,7 @@ var CApp = (function () {
                 if (countWater.Get_ticks() > 1000 * 3) {
                     print("Plant now ready");
                     theApp.plantState = 1;
+                    theApp.Plant.currentFrameRow = 2;
                     print("Back to work");
                     theApp.inMiniGame = StateOfGame.WORKING;
                     countWater.Stop();
