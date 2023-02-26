@@ -240,7 +240,8 @@ var CApp = (function () {
             "./src/assets/phone.png",
             "./src/assets/plant.png",
             "./src/assets/yarn.png",
-            "./src/assets/hands.png"
+            "./src/assets/hands.png",
+            "./src/assets/tinder.png"
         ];
         this.Walter = new CPlayer();
         this.Walter.OnLoad("./src/assets/PKM_1.png", 32, 32, 0);
@@ -260,7 +261,8 @@ var CApp = (function () {
             [0.6, 0.78],
             [0.56, 0.43],
             [0., 0.52],
-            [0.1, 0.65]
+            [0.1, 0.65],
+            [0.1, 0.45]
         ];
         var _loop_1 = function (index) {
             var element = this_1.staticElements[index];
@@ -338,6 +340,10 @@ var CApp = (function () {
             this.clock.ShowClock();
             for (var i = 0; i < this.ENTITY; i++) {
                 CEntity.EntityList[i].OnRender();
+            }
+            if (this.inMiniGame == StateOfGame.TINDER) {
+                print("oui");
+                image(theApp.staticElements[8], windowWidth * theApp.staticElementsCoordinates[8][0], theApp.staticElementsCoordinates[8][1] * windowHeight);
             }
         }
         if (this.inVictory) {

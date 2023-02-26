@@ -265,8 +265,9 @@ class CApp {
             "./src/assets/computer.png",
             "./src/assets/phone.png",
             "./src/assets/plant.png",
-            "./src/assets/yarn.png"
-            "./src/assets/hands.png"
+            "./src/assets/yarn.png",
+            "./src/assets/hands.png",
+            "./src/assets/tinder.png"
         ]
 
         //Initialisation du joueur
@@ -294,7 +295,8 @@ class CApp {
             [0.6, 0.78], // phone
             [0.56, 0.43], // plant
             [0., 0.52], // yarn
-            [0.1, 0.65] // hands
+            [0.1, 0.65], // hands
+            [0.1, 0.45] // tinder
         ]
 
         for (let index = 0; index < this.staticElements.length; index++) {
@@ -389,6 +391,11 @@ class CApp {
             for (let i = 0; i < this.ENTITY; i++) {
                 CEntity.EntityList[i].OnRender();
             }
+
+            if (this.inMiniGame == StateOfGame.TINDER) {
+                print("oui")
+                image(theApp.staticElements[8], windowWidth*theApp.staticElementsCoordinates[8][0], theApp.staticElementsCoordinates[8][1]*windowHeight);
+            }
         }
         
         if (this.inVictory) {
@@ -435,4 +442,4 @@ class CApp {
 // Plant   : if watered : relax progress bar --> DONE
 //           if not : hold w : cut auto when released (2 et 3s) --> DONE
 
-// 
+// Tinder  : swap 10 fois avec les fleches
