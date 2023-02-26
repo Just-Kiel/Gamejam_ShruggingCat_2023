@@ -89,9 +89,6 @@ function keyPressed() {
         }
     }
     if (theApp.inMiniGame == StateOfGame.PLANT && key == "w") {
-        if (countWater == undefined) {
-            countWater = new Timer();
-        }
         countWater.Start();
         theApp.Plant.currentFrameRow = 1;
     }
@@ -292,6 +289,7 @@ var CApp = (function () {
         var _this = this;
         countBoss = new Timer();
         countBoss.Start();
+        countWater = new Timer();
         this.staticElements = [
             "./src/assets/game_background.png",
             "./src/assets/desk.png",
@@ -410,7 +408,6 @@ var CApp = (function () {
         this.progressBarPercentage = 1;
         this.bossVisible = false;
         countYarn = 0;
-        countWater = 0;
     };
     CApp.prototype.OnLoop = function () {
         CFPS.FPSControl.OnLoop();

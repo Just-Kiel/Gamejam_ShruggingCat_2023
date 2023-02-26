@@ -40,9 +40,6 @@ function keyPressed() {
     }
 
     if (theApp.inMiniGame == StateOfGame.PLANT && key == "w") {
-        if (countWater == undefined) {
-            countWater = new Timer()
-        }
         countWater.Start()
         theApp.Plant.currentFrameRow = 1;
     }
@@ -333,6 +330,7 @@ class CApp {
         // Boss
         countBoss = new Timer()
         countBoss.Start();
+        countWater = new Timer()
 
         // Load des images du jeu
         this.staticElements = [
@@ -476,7 +474,6 @@ class CApp {
         this.bossVisible = false
 
         countYarn = 0;
-        countWater = 0;
     }
 
     OnLoop() {
