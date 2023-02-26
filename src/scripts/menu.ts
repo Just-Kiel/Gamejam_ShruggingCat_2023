@@ -1,8 +1,16 @@
 //Permet de differencier les pages du jeu
 enum Page {
     MENU = 0,
-    RULES
+    RULES,
+    GAMEOVER
 };
+
+function DetectButtonToMainMenu(menu){
+
+    // bouton
+
+    return Page.MENU
+}
 
 class Menu {
 
@@ -22,6 +30,9 @@ class Menu {
     rulesBackgroundImage;
     backButtonImage;
     backButtonCoordinates : Array<number>;
+
+    // final images
+    finalImages
     
     constructor([xPlayButton, yPlayButton], [xRulesButton, yRulesButton], [xBackButton, yBackButton]) {
         this.currentMenuState = Page.MENU;
@@ -35,6 +46,10 @@ class Menu {
         this.playButtonCoordinates = [xPlayButton, yPlayButton]
         this.rulesButtonCoordinates = [xRulesButton, yRulesButton]
         this.backButtonCoordinates = [xBackButton, yBackButton]
+
+        this.finalImages = [
+            "./src/assets/gameover.png"
+        ]
     }
     
     //Image
@@ -44,6 +59,13 @@ class Menu {
         this.rulesButtonImage = loadImage(this.rulesButtonImage)
         this.rulesBackgroundImage = loadImage(this.rulesBackgroundImage)
         this.backButtonImage = loadImage(this.backButtonImage) 
+        
+        for (let index = 0; index < this.finalImages.length; index++) {
+            const element = this.finalImages[index];
+            this.finalImages[index] = loadImage(element, () => {
+                this.finalImages[index].resize(windowWidth*(this.finalImages[index].width/1920), windowHeight*(this.finalImages[index].height/1080));
+            })
+        }
     }
 
     OnDraw(X, Y) {
@@ -58,6 +80,8 @@ class Menu {
             image(this.rulesBackgroundImage, X, Y);
 
             image(this.backButtonImage, this.backButtonCoordinates[0]*windowWidth, this.backButtonCoordinates[1]*windowHeight)
+        } else if (this.currentMenuState == Page.GAMEOVER){
+            image(this.finalImages[0], 0, 0)
         }
     }
 };

@@ -183,6 +183,10 @@ function calculateBBOXES(elements) {
 }
 function mouseClicked() {
     if (theApp.inMenu) {
+        if (theApp.menu.currentMenuState == Page.GAMEOVER) {
+            theApp.inDefeat = false;
+            theApp.menu.currentMenuState = DetectButtonToMainMenu(theApp.menu);
+        }
         var elements = [theApp.menu.playButtonImage, theApp.menu.playButtonCoordinates, theApp.menu.rulesButtonImage, theApp.menu.rulesButtonCoordinates, theApp.menu.backButtonImage, theApp.menu.backButtonCoordinates];
         var bboxes = calculateBBOXES(elements);
         if (theApp.menu.currentMenuState == Page.MENU) {
@@ -245,6 +249,7 @@ function mouseClicked() {
                 print("You relax now !");
                 theApp.Plant.currentFrameRow = 0;
                 theApp.plantState = 0;
+                theApp.progressBarPercentage -= 15;
                 print("Go back before boss sees you");
                 theApp.inMiniGame = StateOfGame.WORKING;
             }
@@ -413,6 +418,8 @@ var CApp = (function () {
         }
         if (this.inDefeat) {
             print("You loose");
+            this.menu.currentMenuState = Page.GAMEOVER;
+            this.inMenu = true;
         }
     };
     CApp.prototype.OnRender = function () {
@@ -637,8 +644,12 @@ var Page;
 (function (Page) {
     Page[Page["MENU"] = 0] = "MENU";
     Page[Page["RULES"] = 1] = "RULES";
+    Page[Page["GAMEOVER"] = 2] = "GAMEOVER";
 })(Page || (Page = {}));
 ;
+function DetectButtonToMainMenu(menu) {
+    return Page.MENU;
+}
 var Menu = (function () {
     function Menu(_a, _b, _c) {
         var xPlayButton = _a[0], yPlayButton = _a[1];
@@ -653,13 +664,27 @@ var Menu = (function () {
         this.playButtonCoordinates = [xPlayButton, yPlayButton];
         this.rulesButtonCoordinates = [xRulesButton, yRulesButton];
         this.backButtonCoordinates = [xBackButton, yBackButton];
+        this.finalImages = [
+            "./src/assets/gameover.png"
+        ];
     }
     Menu.prototype.OnLoad = function () {
+        var _this = this;
         this.backgroundImage = loadImage(this.backgroundImage);
         this.playButtonImage = loadImage(this.playButtonImage);
         this.rulesButtonImage = loadImage(this.rulesButtonImage);
         this.rulesBackgroundImage = loadImage(this.rulesBackgroundImage);
         this.backButtonImage = loadImage(this.backButtonImage);
+        var _loop_2 = function (index) {
+            var element = this_2.finalImages[index];
+            this_2.finalImages[index] = loadImage(element, function () {
+                _this.finalImages[index].resize(windowWidth * (_this.finalImages[index].width / 1920), windowHeight * (_this.finalImages[index].height / 1080));
+            });
+        };
+        var this_2 = this;
+        for (var index = 0; index < this.finalImages.length; index++) {
+            _loop_2(index);
+        }
     };
     Menu.prototype.OnDraw = function (X, Y) {
         if (this.currentMenuState == Page.MENU) {
@@ -672,6 +697,9 @@ var Menu = (function () {
             this.rulesBackgroundImage.resize(windowWidth, windowHeight);
             image(this.rulesBackgroundImage, X, Y);
             image(this.backButtonImage, this.backButtonCoordinates[0] * windowWidth, this.backButtonCoordinates[1] * windowHeight);
+        }
+        else if (this.currentMenuState == Page.GAMEOVER) {
+            image(this.finalImages[0], 0, 0);
         }
     };
     return Menu;

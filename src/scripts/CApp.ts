@@ -148,6 +148,11 @@ function calculateBBOXES(elements){
 
 function mouseClicked(){
     if(theApp.inMenu){
+        if (theApp.menu.currentMenuState == Page.GAMEOVER){
+            theApp.inDefeat = false
+            theApp.menu.currentMenuState = DetectButtonToMainMenu(theApp.menu)
+        }
+
         let elements = [theApp.menu.playButtonImage, theApp.menu.playButtonCoordinates, theApp.menu.rulesButtonImage, theApp.menu.rulesButtonCoordinates, theApp.menu.backButtonImage, theApp.menu.backButtonCoordinates]
 
         let bboxes = calculateBBOXES(elements)
@@ -230,6 +235,8 @@ function mouseClicked(){
                 print("You relax now !")
                 theApp.Plant.currentFrameRow = 0;
                 theApp.plantState = 0
+
+                theApp.progressBarPercentage -= 15
 
                 print("Go back before boss sees you")
                 theApp.inMiniGame = StateOfGame.WORKING
@@ -479,8 +486,9 @@ class CApp {
         }
         if (this.inDefeat) {
             //DEFEAT LOOP
-
             print("You loose")
+            this.menu.currentMenuState = Page.GAMEOVER
+            this.inMenu = true
         }
     }
 
@@ -573,5 +581,5 @@ class CApp {
 
 
 // yarn : counter stop --> DONE
-// plant: baisse progress bar
+// plant: baisse progress bar --> DONE
 // game over
