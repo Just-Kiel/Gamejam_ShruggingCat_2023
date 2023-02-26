@@ -250,6 +250,8 @@ function mouseClicked() {
                 theApp.Plant.currentFrameRow = 0;
                 theApp.plantState = 0;
                 theApp.progressBarPercentage -= 15;
+                if (theApp.progressBarPercentage < 15)
+                    theApp.progressBarPercentage = 1;
                 print("Go back before boss sees you");
                 theApp.inMiniGame = StateOfGame.WORKING;
             }
@@ -648,7 +650,13 @@ var Page;
 })(Page || (Page = {}));
 ;
 function DetectButtonToMainMenu(menu) {
-    return Page.MENU;
+    var bbox = calculateBBOXES([menu.finalImages[1], menu.finalCoordinates[1]]);
+    if (mouseX >= bbox[0][0] && mouseX <= bbox[0][1] && mouseY >= bbox[0][2] && mouseY <= bbox[0][3]) {
+        return Page.MENU;
+    }
+    else {
+        return Page.GAMEOVER;
+    }
 }
 var Menu = (function () {
     function Menu(_a, _b, _c) {
@@ -665,7 +673,12 @@ var Menu = (function () {
         this.rulesButtonCoordinates = [xRulesButton, yRulesButton];
         this.backButtonCoordinates = [xBackButton, yBackButton];
         this.finalImages = [
-            "./src/assets/gameover.png"
+            "./src/assets/gameover.png",
+            "./src/assets/main_menu.png"
+        ];
+        this.finalCoordinates = [
+            [0, 0],
+            [0.7, 0.8]
         ];
     }
     Menu.prototype.OnLoad = function () {
@@ -699,7 +712,8 @@ var Menu = (function () {
             image(this.backButtonImage, this.backButtonCoordinates[0] * windowWidth, this.backButtonCoordinates[1] * windowHeight);
         }
         else if (this.currentMenuState == Page.GAMEOVER) {
-            image(this.finalImages[0], 0, 0);
+            image(this.finalImages[0], this.finalCoordinates[0][0] * windowWidth, this.finalCoordinates[0][1] * windowHeight);
+            image(this.finalImages[1], this.finalCoordinates[1][0] * windowWidth, this.finalCoordinates[1][1] * windowHeight);
         }
     };
     return Menu;

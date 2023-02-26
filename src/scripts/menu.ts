@@ -8,8 +8,13 @@ enum Page {
 function DetectButtonToMainMenu(menu){
 
     // bouton
+    let bbox = calculateBBOXES([menu.finalImages[1], menu.finalCoordinates[1]])
 
-    return Page.MENU
+    if(mouseX >= bbox[0][0] && mouseX <= bbox[0][1] && mouseY >= bbox[0][2] && mouseY <= bbox[0][3]){
+        return Page.MENU
+    } else {
+        return Page.GAMEOVER
+    }
 }
 
 class Menu {
@@ -33,6 +38,7 @@ class Menu {
 
     // final images
     finalImages
+    finalCoordinates;
     
     constructor([xPlayButton, yPlayButton], [xRulesButton, yRulesButton], [xBackButton, yBackButton]) {
         this.currentMenuState = Page.MENU;
@@ -48,7 +54,13 @@ class Menu {
         this.backButtonCoordinates = [xBackButton, yBackButton]
 
         this.finalImages = [
-            "./src/assets/gameover.png"
+            "./src/assets/gameover.png",
+            "./src/assets/main_menu.png"
+        ]
+
+        this.finalCoordinates = [
+            [0, 0],
+            [0.7, 0.8]
         ]
     }
     
@@ -81,7 +93,11 @@ class Menu {
 
             image(this.backButtonImage, this.backButtonCoordinates[0]*windowWidth, this.backButtonCoordinates[1]*windowHeight)
         } else if (this.currentMenuState == Page.GAMEOVER){
-            image(this.finalImages[0], 0, 0)
+            // background
+            image(this.finalImages[0], this.finalCoordinates[0][0]*windowWidth, this.finalCoordinates[0][1]*windowHeight)
+
+            // button
+            image(this.finalImages[1], this.finalCoordinates[1][0]*windowWidth, this.finalCoordinates[1][1]*windowHeight)
         }
     }
 };

@@ -237,6 +237,7 @@ function mouseClicked(){
                 theApp.plantState = 0
 
                 theApp.progressBarPercentage -= 15
+                if (theApp.progressBarPercentage < 15) theApp.progressBarPercentage = 1
 
                 print("Go back before boss sees you")
                 theApp.inMiniGame = StateOfGame.WORKING
