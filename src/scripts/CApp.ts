@@ -304,7 +304,8 @@ class CApp {
             "./src/assets/yarn.png",
             "./src/assets/hands.png",
             "./src/assets/tinder.png",
-            "./src/assets/boss.png"
+            "./src/assets/boss.png",
+            "./src/assets/space.png"
         ]
 
         //Initialisation du joueur
@@ -334,7 +335,8 @@ class CApp {
             [0., 0.52], // yarn
             [0.1, 0.65], // hands
             [0.1, 0.45], // tinder
-            [0.43, 0.3] // boss
+            [0.43, 0.3], // boss
+            [0.26, 0.02] // space
         ]
 
         for (let index = 0; index < this.staticElements.length; index++) {
@@ -423,12 +425,15 @@ class CApp {
                 this.inMenu = true
             }
 
-            // TODO if GameState == CATFLIX : changer screen pc
-
             this.GameStaticElements()
             this.clock.ShowClock();
             for (let i = 0; i < this.ENTITY; i++) {
                 CEntity.EntityList[i].OnRender();
+            }
+
+            if (this.inMiniGame != StateOfGame.WORKING) {
+                // space
+                image(this.staticElements[10], windowWidth*this.staticElementsCoordinates[10][0], this.staticElementsCoordinates[10][1]*windowHeight);
             }
 
             if (this.inMiniGame == StateOfGame.TINDER) {
@@ -486,5 +491,6 @@ class CApp {
 // Tinder  : swap 10 fois avec les fleches --> DONE
 
 
-// position du boss
-// progress bar
+// position du boss --> DONE
+// progress bar : rectangle (x et y à définir et couleurs à définir)
+// position barre espace --> DONE
