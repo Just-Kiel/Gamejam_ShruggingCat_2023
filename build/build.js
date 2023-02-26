@@ -70,16 +70,21 @@ function keyPressed() {
         if (countTinder % 2 == 0 && keyCode == LEFT_ARROW) {
             print("You swipped left");
             countTinder++;
+            theApp.Tinder.currentFrameRow = 0;
             theApp.points += 2;
         }
         else if (countTinder % 2 == 1 && keyCode == RIGHT_ARROW) {
             print("You swipped right");
             countTinder++;
+            theApp.Tinder.currentFrameRow = 1;
             theApp.points += 2;
         }
         if (countTinder > 10) {
             print("Go back to work before boss sees you !");
+            theApp.Walter.currentFrameRow = 0;
+            theApp.Walter.anim_Control.maxFrames = 2;
             theApp.inMiniGame = StateOfGame.WORKING;
+            theApp.Tinder.currentFrameRow = 1;
             countTinder = 0;
         }
     }
@@ -128,6 +133,8 @@ function keyPressed() {
             countYarn = 0;
             theApp.Yarn.currentFrameRow = 9;
         }
+        theApp.Walter.currentFrameRow = 0;
+        theApp.Walter.anim_Control.maxFrames = 2;
         theApp.Computer.currentFrameCol = 0;
         theApp.Computer.currentFrameRow = 0;
         if (theApp.plantState != 1) {
@@ -207,6 +214,8 @@ function mouseClicked() {
             if (mouseX >= theApp.bboxesInteractablesElements[1][0] && mouseX <= theApp.bboxesInteractablesElements[1][1] && mouseY >= theApp.bboxesInteractablesElements[1][2] && mouseY <= theApp.bboxesInteractablesElements[1][3]) {
                 print("Launch Tinder");
                 theApp.inMiniGame = StateOfGame.TINDER;
+                theApp.Walter.currentFrameRow = 1;
+                theApp.Walter.anim_Control.maxFrames = 1;
             }
             if (mouseX >= theApp.bboxesInteractablesElements[2][0] && mouseX <= theApp.bboxesInteractablesElements[2][1] && mouseY >= theApp.bboxesInteractablesElements[2][2] && mouseY <= theApp.bboxesInteractablesElements[2][3]) {
                 print("Launch Plant Action");
@@ -279,13 +288,15 @@ var CApp = (function () {
             "./src/assets/space.png"
         ];
         this.Walter = new CPlayer();
-        this.Walter.OnLoad("./src/assets/PKM_1.png", 32, 32, 0);
+        this.Walter.OnLoad(this.staticElements[7], 869, 421, 2);
         this.Computer = new CObject();
         this.Computer.OnLoad(this.staticElements[3], 814, 767, 1);
         this.Plant = new CObject();
         this.Plant.OnLoad(this.staticElements[5], 171, 316, 1);
         this.Yarn = new CObject();
         this.Yarn.OnLoad(this.staticElements[6], 199, 254, 1);
+        this.Tinder = new CObject();
+        this.Tinder.OnLoad(this.staticElements[8], 482, 631, 1);
         this.menu = new Menu([0.55, 0.65], [0.56, 0.78], [0, 0]);
         this.menu.OnLoad();
         this.staticElementsCoordinates = [
@@ -333,13 +344,20 @@ var CApp = (function () {
         this.Yarn.width *= windowWidth / 1920.0;
         this.Yarn.height *= windowHeight / 1080.0;
         CEntity.EntityList[2] = this.Yarn;
-        this.Walter.X = windowWidth * 0.1;
-        this.Walter.Y = windowHeight * 0.18;
-        this.Walter.Owidth = 128;
-        this.Walter.Oheight = 256;
+        this.Walter.X = windowWidth * this.staticElementsCoordinates[7][0];
+        this.Walter.Y = windowHeight * this.staticElementsCoordinates[7][1];
+        this.Walter.Owidth = 869;
+        this.Walter.Oheight = 842;
         this.Walter.width *= windowWidth / 1920.0;
         this.Walter.height *= windowHeight / 1080.0;
         CEntity.EntityList[3] = this.Walter;
+        this.Tinder.X = windowWidth * this.staticElementsCoordinates[8][0];
+        this.Tinder.Y = windowHeight * this.staticElementsCoordinates[8][1];
+        this.Tinder.Owidth = 482;
+        this.Tinder.Oheight = 1262;
+        this.Tinder.width *= windowWidth / 1920.0;
+        this.Tinder.height *= windowHeight / 1080.0;
+        this.Tinder.currentFrameRow = 1;
         this.ENTITY = 4;
     };
     CApp.prototype.OnLoop = function () {
@@ -348,6 +366,8 @@ var CApp = (function () {
             for (var i = 0; i < this.ENTITY; i++) {
                 CEntity.EntityList[i].OnLoop();
                 CEntity.EntityList[i].Surf_Entity.resize(windowWidth * (CEntity.EntityList[i].Owidth / 1920.0), windowHeight * (CEntity.EntityList[i].Oheight / 1080.0));
+                this.Tinder.OnLoop();
+                this.Tinder.Surf_Entity.resize(windowWidth * (this.Tinder.Owidth / 1920.0), windowHeight * (this.Tinder.Oheight / 1080.0));
             }
             if (this.inMiniGame == StateOfGame.PLANT && keyIsDown(87)) {
                 if (countWater.Get_ticks() > 1000 * 3) {
@@ -383,7 +403,7 @@ var CApp = (function () {
                 image(this.staticElements[10], windowWidth * this.staticElementsCoordinates[10][0], this.staticElementsCoordinates[10][1] * windowHeight);
             }
             if (this.inMiniGame == StateOfGame.TINDER) {
-                image(theApp.staticElements[8], windowWidth * theApp.staticElementsCoordinates[8][0], theApp.staticElementsCoordinates[8][1] * windowHeight);
+                theApp.Tinder.OnRender();
             }
         }
         if (this.inVictory) {
@@ -396,7 +416,6 @@ var CApp = (function () {
         image(this.staticElements[1], 0, windowHeight - this.staticElements[1].height);
         CSurface.OnDraw(this.staticElements[2], windowWidth - this.staticElements[2].width, 0.15 * windowHeight, 0, this.staticElements[2].height / 3 * Math.floor((this.clock.Get_ticks() * 3) / (120 * 1000)), this.staticElements[2].width, this.staticElements[2].height / 3);
         image(this.staticElements[4], windowWidth * this.staticElementsCoordinates[4][0], this.staticElementsCoordinates[4][1] * windowHeight);
-        image(this.staticElements[7], windowWidth * this.staticElementsCoordinates[7][0], this.staticElementsCoordinates[7][1] * windowHeight);
         image(this.staticElements[9], windowWidth * this.staticElementsCoordinates[9][0], this.staticElementsCoordinates[9][1] * windowHeight);
     };
     return CApp;
