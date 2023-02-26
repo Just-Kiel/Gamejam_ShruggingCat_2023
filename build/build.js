@@ -274,7 +274,9 @@ var CApp = (function () {
             "./src/assets/plant.png",
             "./src/assets/tinder.png",
             "./src/assets/yarn.png",
-            "./src/assets/hands.png"
+            "./src/assets/hands.png",
+            "./src/assets/tinder.png",
+            "./src/assets/boss.png"
         ];
         this.Walter = new CPlayer();
         this.Walter.OnLoad("./src/assets/PKM_1.png", 32, 32, 0);
@@ -295,7 +297,8 @@ var CApp = (function () {
             [0.56, 0.43],
             [0., 0.52],
             [0.1, 0.65],
-            [0.1, 0.45]
+            [0.1, 0.45],
+            [0.43, 0.3]
         ];
         var _loop_1 = function (index) {
             var element = this_1.staticElements[index];
@@ -390,6 +393,7 @@ var CApp = (function () {
         CSurface.OnDraw(this.staticElements[2], windowWidth - this.staticElements[2].width, 0.15 * windowHeight, 0, this.staticElements[2].height / 3 * Math.floor((this.clock.Get_ticks() * 3) / (120 * 1000)), this.staticElements[2].width, this.staticElements[2].height / 3);
         image(this.staticElements[4], windowWidth * this.staticElementsCoordinates[4][0], this.staticElementsCoordinates[4][1] * windowHeight);
         image(this.staticElements[7], windowWidth * this.staticElementsCoordinates[7][0], this.staticElementsCoordinates[7][1] * windowHeight);
+        image(this.staticElements[9], windowWidth * this.staticElementsCoordinates[9][0], this.staticElementsCoordinates[9][1] * windowHeight);
     };
     return CApp;
 }());
