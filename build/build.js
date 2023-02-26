@@ -272,7 +272,6 @@ var CApp = (function () {
             "./src/assets/computer.png",
             "./src/assets/phone.png",
             "./src/assets/plant.png",
-            "./src/assets/tinder.png",
             "./src/assets/yarn.png",
             "./src/assets/hands.png",
             "./src/assets/tinder.png",
