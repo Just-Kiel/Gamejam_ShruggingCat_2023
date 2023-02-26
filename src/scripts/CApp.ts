@@ -250,7 +250,8 @@ class CApp {
             "./src/assets/computer.png",
             "./src/assets/phone.png",
             "./src/assets/plant.png",
-            "./src/assets/yarn_completed.png"
+            "./src/assets/yarn_completed.png",
+            "./src/assets/hands.png"
         ]
 
         //Initialisation du joueur
@@ -274,7 +275,8 @@ class CApp {
             [0.1, 0.18], // computer
             [0.6, 0.78], // phone
             [0.56, 0.43], // plant
-            [0., 0.52] // yarn
+            [0., 0.52], // yarn
+            [0.1, 0.65] // hands
         ]
 
         for (let index = 0; index < this.staticElements.length; index++) {
@@ -392,13 +394,11 @@ class CApp {
 
         // yarn
         image(this.staticElements[6], windowWidth*this.staticElementsCoordinates[6][0], this.staticElementsCoordinates[6][1]*windowHeight);
+
+        // hands
+        image(this.staticElements[7], windowWidth*this.staticElementsCoordinates[7][0], this.staticElementsCoordinates[7][1]*windowHeight);
     }
 };
-
-// faire les interactions de chaque mini jeu (starting by la pelote)
-// Pelote : if pelote plein (clic gauche pour distraire) and then vide and back to work --> DONE
-//          if vide (8 fleches : suivre la sprite if wrong no problem) and then pleine and back to work --> DONE
-    
 
 // faire les interactions de chaque mini jeu (starting by la pelote)
 // Pelote : if pelote plein (clic gauche pour distraire) and then vide and back to work --> DONE
@@ -409,3 +409,5 @@ class CApp {
 
 // Plant   : if watered : relax progress bar --> DONE
 //           if not : hold w : cut auto when released (2 et 3s) --> DONE
+
+// 
